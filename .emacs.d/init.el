@@ -7,6 +7,8 @@
 (set-frame-font "Source Code Pro")
 
 (global-visual-line-mode t)
+(delete-selection-mode t)
+(show-paren-mode t)
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
