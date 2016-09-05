@@ -1,4 +1,3 @@
-
 (require 'package)
 (package-initialize)
 (add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/") t)
@@ -9,6 +8,9 @@
 (global-visual-line-mode t)
 (delete-selection-mode t)
 (show-paren-mode t)
+
+(ido-mode 1)
+(ido-everywhere 1)
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
