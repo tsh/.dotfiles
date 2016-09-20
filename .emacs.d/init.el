@@ -1,9 +1,19 @@
 (require 'package)
-(defvar my-packages '(smex))
+
+(add-to-list 'package-archives
+         '("melpa" . "http://melpa.org/packages/") t)
+
+;;(unless package-archive-contents
+  ;;(package-refresh-contents))
+
 (package-initialize)
 
-(add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/") )
-(add-to-list 'package-archives '("marmalade" . "https://marmalade-repo.org/packages/"))
+(defvar package-list
+  '(smex))
+
+(dolist (p package-list)
+  (when (not (package-installed-p p))
+         (package-install p)))
 
 (tool-bar-mode -1)
 (set-frame-font "Source Code Pro")
@@ -14,13 +24,6 @@
 
 (ido-mode 1)
 (ido-everywhere 1)
-
-(defvar my-packages '(smex))
-
-(package-initialize)
-(dolist (p my-packages)
-  (when (not (package-installed-p p))
-    (package-install p)))
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
