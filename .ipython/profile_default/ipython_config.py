@@ -287,7 +287,7 @@
 ## Options for displaying tab completions, 'column', 'multicolumn', and
 #  'readlinelike'. These options are for `prompt_toolkit`, see `prompt_toolkit`
 #  documentation for more information.
-#c.TerminalInteractiveShell.display_completions = 'multicolumn'
+c.TerminalInteractiveShell.display_completions = 'readlinelike'
 
 ## Shortcut style to use at the prompt. 'vi' or 'emacs'.
 #c.TerminalInteractiveShell.editing_mode = 'emacs'
