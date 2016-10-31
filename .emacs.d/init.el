@@ -9,7 +9,7 @@
 (package-initialize)
 
 (defvar package-list
-  '(smex))
+  '(smex, neotree))
 
 (dolist (p package-list)
   (when (not (package-installed-p p))
