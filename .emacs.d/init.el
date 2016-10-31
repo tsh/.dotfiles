@@ -9,7 +9,8 @@
 (package-initialize)
 
 (defvar package-list
-  '(smex, neotree))
+  '(smex
+    neotree))
 
 (dolist (p package-list)
   (when (not (package-installed-p p))
@@ -24,6 +25,10 @@
 
 (ido-mode 1)
 (ido-everywhere 1)
+
+;; NEOTREE
+(require 'neotree)
+(global-set-key [f8] 'neotree-toggle)
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
