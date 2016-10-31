@@ -1,5 +1,5 @@
 # .dotfiles
 
 ## Emacs TODO:
-- [ ] show project tree
+- [x] show project tree
 - [ ] python autocomplete
