@@ -22,6 +22,7 @@
 (global-visual-line-mode t)
 (delete-selection-mode t)
 (show-paren-mode t)
+(global-linum-mode t)
 
 (ido-mode 1)
 (ido-everywhere 1)
