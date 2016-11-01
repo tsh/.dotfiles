@@ -13,7 +13,10 @@
 
 (defvar package-list
   '(smex
-    neotree))
+    neotree
+    anaconda-mode
+    zenburn-theme
+    ))
 
 (dolist (p package-list)
   (when (not (package-installed-p p))
@@ -21,7 +24,6 @@
 
 (tool-bar-mode -1)
 (set-frame-font "Source Code Pro")
-(load-theme 'material t)
 (global-visual-line-mode t)
 (delete-selection-mode t)
 (show-paren-mode t)
@@ -30,6 +32,16 @@
 (ido-mode 1)
 (ido-everywhere 1)
 
+
 ;; NEOTREE
 (require 'neotree)
 (global-set-key [f8] 'neotree-toggle)
+
+
+;; PYTHON
+(add-hook 'python-mode-hook 'anaconda-mode)
+
+
+;; THEMES
+;;(load-theme 'monokai t)
+(load-theme 'zenburn t)
