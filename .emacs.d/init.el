@@ -14,6 +14,8 @@
 (defvar package-list
   '(smex
     neotree
+    company
+    company-anaconda
     anaconda-mode
     zenburn-theme
     ))
@@ -36,6 +38,13 @@
 ;; NEOTREE
 (require 'neotree)
 (global-set-key [f8] 'neotree-toggle)
+
+
+;; COMPANY
+(add-hook 'after-init-hook 'global-company-mode)
+;; COMPANY ANACONDA
+(eval-after-load "company"
+ '(add-to-list 'company-backends 'company-anaconda))
 
 
 ;; PYTHON
