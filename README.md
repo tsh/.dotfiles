@@ -5,5 +5,5 @@
 - [ ] python autocomplete
 - [ ] vim mode
 - [ ] prevent emacs from creating #{name}# file
-- [ ] movement on screen
+- [x] movement on screen, ace jump
 - [ ] run script in repl
