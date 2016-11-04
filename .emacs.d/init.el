@@ -63,7 +63,7 @@
   "Emacs quick move minor mode"
   t)
 ;; you can select the key you prefer to
-(define-key global-map (kbd "C-c SPC") 'ace-jump-mode)
+(define-key global-map (kbd "C-;") 'ace-jump-mode)
 ;; enable a more powerful jump back function from ace jump mode
 (autoload 
   'ace-jump-mode-pop-mark
