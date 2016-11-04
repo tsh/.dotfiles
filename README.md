@@ -2,7 +2,8 @@
 
 ## Emacs TODO:
 - [x] show project tree
-- [ ] python autocomplete
+- [x] python autocomplete
+- [ ] show func signature in python autocomplete
 - [ ] vim mode
 - [ ] prevent emacs from creating #{name}# file
 - [x] movement on screen, ace jump
