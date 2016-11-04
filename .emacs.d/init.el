@@ -65,7 +65,7 @@
 ;; you can select the key you prefer to
 (define-key global-map (kbd "C-c SPC") 'ace-jump-mode)
 ;; enable a more powerful jump back function from ace jump mode
-(autoload  x
+(autoload 
   'ace-jump-mode-pop-mark
   "ace-jump-mode"
   "Ace jump back:-)"
