@@ -18,6 +18,7 @@
     company
     company-anaconda
     anaconda-mode
+    company-quickhelp
     zenburn-theme
     ))
 
@@ -50,7 +51,11 @@
 (add-hook 'after-init-hook 'global-company-mode)
 ;; COMPANY ANACONDA
 (eval-after-load "company"
- '(add-to-list 'company-backends 'company-anaconda))
+  '(add-to-list 'company-backends 'company-anaconda))
+;; COMPANY QUICKHELP
+(company-quickhelp-mode 1)
+(eval-after-load 'company
+  '(define-key company-active-map (kbd "M-h") #'company-quickhelp-manual-begin))
 
 
 ;; PYTHON
