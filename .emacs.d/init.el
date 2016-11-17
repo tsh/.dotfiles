@@ -19,6 +19,7 @@
     company-anaconda
     anaconda-mode
     company-quickhelp
+    popwin
     markdown-mode
     zenburn-theme
     ))
@@ -66,6 +67,9 @@
 ;; Markdown mode
 (custom-set-variables
  '(markdown-command "/usr/bin/pandoc"))
+
+;; POPWIN
+(popwin-mode 1)
 
 
 ;; ACE JUMP
