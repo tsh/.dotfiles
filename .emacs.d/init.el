@@ -46,6 +46,7 @@
 ;; NEOTREE
 (require 'neotree)
 (global-set-key [f8] 'neotree-toggle)
+(setq neo-theme 'arrow)
 
 
 ;; COMPANY
