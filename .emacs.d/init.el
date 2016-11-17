@@ -19,6 +19,7 @@
     company-anaconda
     anaconda-mode
     company-quickhelp
+    markdown-mode
     zenburn-theme
     ))
 
@@ -60,6 +61,10 @@
 
 ;; PYTHON
 (add-hook 'python-mode-hook 'anaconda-mode)
+
+;; Markdown mode
+(custom-set-variables
+ '(markdown-command "/usr/bin/pandoc"))
 
 
 ;; ACE JUMP
