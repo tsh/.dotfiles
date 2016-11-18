@@ -64,6 +64,8 @@
 (company-quickhelp-mode 1)
 (eval-after-load 'company
   '(define-key company-active-map (kbd "M-h") #'company-quickhelp-manual-begin))
+;; company autocomplete
+(global-set-key (kbd "C-i") 'company-complete)
 
 
 ;; PYTHON
