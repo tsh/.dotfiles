@@ -19,7 +19,6 @@
     company-anaconda
     anaconda-mode
     company-quickhelp
-    popwin
     markdown-mode
     zenburn-theme
     ))
@@ -37,6 +36,12 @@
 
 (ido-mode 1)
 (ido-everywhere 1)
+
+;; auto save
+(setq backup-directory-alist
+      `((".*" . ,temporary-file-directory)))
+(setq auto-save-file-name-transforms
+      `((".*" ,temporary-file-directory t)))
 
 
 ;; THEMES
@@ -67,9 +72,6 @@
 ;; Markdown mode
 (custom-set-variables
  '(markdown-command "/usr/bin/pandoc"))
-
-;; POPWIN
-(popwin-mode 1)
 
 
 ;; ACE JUMP
