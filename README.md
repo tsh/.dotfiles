@@ -7,7 +7,8 @@
 - [ ] vim mode
 - [x] prevent emacs from creating #{name}# file
 - [x] movement on screen, ace jump
-- [ ] increase font size
+- [x] increase font size
+- [ ] unfold `ipdb`
 - [ ] show what changed after last commit.
 - [ ] run script in repl
 - [ ] use helm to search for file
