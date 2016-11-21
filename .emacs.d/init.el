@@ -20,7 +20,8 @@
     anaconda-mode
     company-quickhelp
     markdown-mode
-    zenburn-theme
+    ;;zenburn-theme
+    darcula-theme
     ))
 
 (dolist (p package-list)
@@ -28,7 +29,7 @@
          (package-install p)))
 
 (tool-bar-mode -1)
-(set-frame-font "Source Code Pro")
+(set-frame-font "Source Code Pro-16")
 (global-visual-line-mode t)
 (delete-selection-mode t)
 (show-paren-mode t)
@@ -46,7 +47,8 @@
 
 ;; THEMES
 ;;(load-theme 'monokai t)
-(load-theme 'zenburn t)
+;;(load-theme 'zenburn t)
+(load-theme 'darcula t)
 
 
 ;; NEOTREE
@@ -71,6 +73,7 @@
 ;; PYTHON
 (add-hook 'python-mode-hook 'anaconda-mode)
 
+
 ;; Markdown mode
 (custom-set-variables
  '(markdown-command "/usr/bin/pandoc"))
@@ -93,6 +96,8 @@
 (eval-after-load "ace-jump-mode"
   '(ace-jump-mode-enable-mark-sync))
 (define-key global-map (kbd "C-x SPC") 'ace-jump-mode-pop-mark)
+
+
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
