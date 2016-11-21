@@ -7,6 +7,7 @@
 - [ ] vim mode
 - [x] prevent emacs from creating #{name}# file
 - [x] movement on screen, ace jump
+- [ ] show what changed after last commit.
 - [ ] run script in repl
 - [ ] use helm to search for file
 - [ ] show vertical line in indented code
