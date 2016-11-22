@@ -19,6 +19,7 @@
     company-anaconda
     anaconda-mode
     company-quickhelp
+    git-gutter
     markdown-mode
     ;;zenburn-theme
     darcula-theme
@@ -77,6 +78,14 @@
 ;; Markdown mode
 (custom-set-variables
  '(markdown-command "/usr/bin/pandoc"))
+
+
+;; GIT GUTTER
+(global-git-gutter-mode t)
+(global-set-key (kbd "C-x C-g") 'git-gutter)
+(global-set-key (kbd "C-x v =") 'git-gutter:popup-hunk)
+(custom-set-variables
+ '(git-gutter:update-interval 2))
 
 
 ;; ACE JUMP
