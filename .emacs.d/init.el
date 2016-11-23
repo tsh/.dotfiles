@@ -39,11 +39,10 @@
 (ido-mode 1)
 (ido-everywhere 1)
 
-;; auto save
-(setq backup-directory-alist
-      `((".*" . ,temporary-file-directory)))
-(setq auto-save-file-name-transforms
-      `((".*" ,temporary-file-directory t)))
+
+;; disable auto-save and auto-backup
+(setq auto-save-default nil)
+(setq make-backup-files nil)
 
 
 ;; THEMES
