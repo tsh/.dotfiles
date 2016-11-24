@@ -9,7 +9,7 @@
 - [x] movement on screen, ace jump
 - [x] increase font size
 - [ ] unfold `ipdb`
-- [ ] show what changed after last commit.
+- [x] show what changed after last commit.
 - [ ] run script in repl
 - [ ] use helm to search for file
 - [ ] show vertical line in indented code
