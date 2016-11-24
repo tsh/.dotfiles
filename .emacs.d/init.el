@@ -40,9 +40,12 @@
 (ido-everywhere 1)
 
 
-;; disable auto-save and auto-backup
-(setq auto-save-default nil)
-(setq make-backup-files nil)
+;; lock file, auto-save and auto-backup
+(setq backup-directory-alist
+     `((".*" . ,temporary-file-directory)))
+(setq auto-save-file-name-transforms
+     `((".*" ,temporary-file-directory t)))
+(setq create-lockfiles nil)
 
 
 ;; THEMES
@@ -83,8 +86,13 @@
 (global-git-gutter-mode t)
 (global-set-key (kbd "C-x C-g") 'git-gutter)
 (global-set-key (kbd "C-x v =") 'git-gutter:popup-hunk)
+;; Revert current hunk
+(global-set-key (kbd "C-x v r") 'git-gutter:revert-hunk)
+
 (custom-set-variables
  '(git-gutter:update-interval 2))
+(add-to-list 'git-gutter:update-hooks 'focus-in-hook)
+(add-to-list 'git-gutter:update-commands 'other-window)
 
 
 ;; ACE JUMP
@@ -107,6 +115,7 @@
 
 
 (custom-set-variables
+ '(git-gutter:update-interval 2)
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
