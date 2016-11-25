@@ -4,7 +4,7 @@
 - [x] show project tree
 - [x] python autocomplete
 - [x] show func signature in python autocomplete
-- [ ] vim mode
+- [x] vim mode
 - [x] prevent emacs from creating #{name}# file
 - [x] movement on screen, ace jump
 - [x] increase font size
