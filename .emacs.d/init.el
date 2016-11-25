@@ -21,6 +21,8 @@
     company-quickhelp
     git-gutter
     markdown-mode
+    evil
+    yasnippet
     ;;zenburn-theme
     darcula-theme
     ))
@@ -35,6 +37,7 @@
 (delete-selection-mode t)
 (show-paren-mode t)
 (global-linum-mode t)
+(setq inhibit-startup-screen t)
 
 (ido-mode 1)
 (ido-everywhere 1)
@@ -71,6 +74,16 @@
   '(define-key company-active-map (kbd "M-h") #'company-quickhelp-manual-begin))
 ;; company autocomplete
 (global-set-key (kbd "C-i") 'company-complete)
+
+
+;; EVIL
+(require 'evil)
+(evil-mode 1)
+
+
+;; YASNIPPET
+(require 'yasnippet)
+(yas-global-mode 1)
 
 
 ;; PYTHON
