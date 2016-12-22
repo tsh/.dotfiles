@@ -8,10 +8,11 @@
 - [x] prevent emacs from creating #{name}# file
 - [x] movement on screen, ace jump
 - [x] increase font size
-- [ ] unfold `ipdb`
+- [x] unfold `ipdb`
 - [x] show what changed after last commit.
 - [ ] run script in repl
 - [ ] use helm to search for file
 - [ ] show vertical line in indented code
 - [ ] show task bar with git branch
 - [ ] autocomplete from vagrant machine
+- [ ] make it beautiful (rendering, fonts)
