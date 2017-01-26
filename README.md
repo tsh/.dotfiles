@@ -10,7 +10,6 @@
 - [x] increase font size
 - [x] unfold `ipdb`
 - [x] show what changed after last commit.
-- [ ] run script in repl
 - [ ] use helm to search for file
 - [ ] show vertical line in indented code
 - [ ] show task bar with git branch
