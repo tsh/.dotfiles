@@ -16,11 +16,25 @@
     neotree
     ace-jump-mode
     company
+    ;; PYTHON
     company-anaconda
     anaconda-mode
+    
+    ;; GO
+    go-mode
+    company-go
+    go-mode
+    go-eldoc
+    go-autocomplete
+
+    ;; js
+    json-mode
+    
+    ;; misc
     company-quickhelp
     git-gutter
     markdown-mode
+    smooth-scroll
     evil
     yasnippet
     ;;zenburn-theme
@@ -89,10 +103,31 @@
 ;; PYTHON
 (add-hook 'python-mode-hook 'anaconda-mode)
 
+;; GO
+(defun go-mode-setup ()
+  (setq compile-command "go build -v && go test -v && go vet && golint")
+  (define-key (current-local-map) "\C-c\C-c" 'compile)
+  (go-eldoc-setup)
+  (setq gofmt-command "goimports")
+  (add-hook 'before-save-hook 'gofmt-before-save)
+  (local-set-key (kbd "M-.") 'godef-jump))
+  (add-hook 'go-mode-hook 'go-mode-setup)
+;;Configure golint
+(add-to-list 'load-path (concat (getenv "GOPATH")  "/src/github.com/golang/lint/misc/emacs"))
+(require 'golint)
+
 
 ;; Markdown mode
 (custom-set-variables
- '(markdown-command "/usr/bin/pandoc"))
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(git-gutter:update-interval 2)
+ '(markdown-command "/usr/bin/pandoc")
+ '(package-selected-packages
+   (quote
+    (go-eldoc company-go go-mode ace-jump-mode zenburn-theme company-anaconda company neotree smex))))
 
 
 ;; GIT GUTTER
@@ -102,8 +137,7 @@
 ;; Revert current hunk
 (global-set-key (kbd "C-x v r") 'git-gutter:revert-hunk)
 
-(custom-set-variables
- '(git-gutter:update-interval 2))
+
 (add-to-list 'git-gutter:update-hooks 'focus-in-hook)
 (add-to-list 'git-gutter:update-commands 'other-window)
 
@@ -127,15 +161,7 @@
 (define-key global-map (kbd "C-x SPC") 'ace-jump-mode-pop-mark)
 
 
-(custom-set-variables
- '(git-gutter:update-interval 2)
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(package-selected-packages
-   (quote
-    (ace-jump-mode zenburn-theme company-anaconda company neotree smex))))
+
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
