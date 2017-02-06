@@ -14,6 +14,14 @@ bindkey -e
 # ls coloring
 export LSCOLORS=dxfxcxdxbxegedabagacad
 
+if ls --color > /dev/null 2>&1; then # GNU coreutils
+  alias ls='ls --color=auto'
+  alias grep="grep --color=auto"
+else # BSD coreutils
+  alias ls='ls -G'
+  alias grep='grep -G'
+fi
+
 export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
 export LANGUAGE=en_US.UTF-8
