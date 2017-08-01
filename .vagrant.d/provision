@@ -2,7 +2,4 @@
 echo " Running custom provisioner from host /home directory"
 apt-get update > /dev/null
 apt-get install git, zsh
-# zsh as default shell
-touch ~vagrant/.bash_profile
-echo export SHELL=$(which zsh) >> ~vagrant/.bash_profile
-echo exec /bin/zsh -l >> ~vagrant/.bash_profile
+
