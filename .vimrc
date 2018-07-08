@@ -18,7 +18,7 @@ set smartcase
 
 " Coding
 syntax enable
-set autoident
+set autoindent
 set showmatch
 set number
 
