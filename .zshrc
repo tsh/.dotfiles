@@ -1,6 +1,8 @@
 # The following lines were added by compinstall
 zstyle :compinstall filename '/home/vagrant/.zshrc'
 
+ZSH_THEME="robbyrussell"
+
 autoload -Uz compinit
 compinit
 # End of lines added by compinstall
@@ -10,6 +12,8 @@ HISTSIZE=1000
 SAVEHIST=1000
 bindkey -e
 # End of lines configured by zsh-newuser-install
+
+plugins=(git colored-man-pages)
 
 # ls coloring
 export LSCOLORS=dxfxcxdxbxegedabagacad
