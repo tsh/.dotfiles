@@ -1,4 +1,5 @@
 # .dotfiles
+Clone and run provision.sh
 
 ## Emacs TODO:
 - [x] show project tree
