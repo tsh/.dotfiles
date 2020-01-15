@@ -62,7 +62,7 @@ autocmd InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
 inoremap <expr><tab> pumvisible() ? "\<c-n>" : "\<tab>"
 
 "" AIRLINE
-let g:airline_theme='simple theme' 
+let g:airline_theme='wombat' 
 "" autoformat
 " Enable alignment
 let g:neoformat_basic_format_align = 1
