@@ -12,7 +12,8 @@ Plug 'scrooloose/nerdtree'
 Plug 'neomake/neomake'
 Plug 'machakann/vim-highlightedyank'
 Plug 'tmhedberg/SimpylFold'
-"" COLORSCHEME
+Plug 'airblade/vim-gitgutter'
+"" COLORSCHEMES
 Plug 'morhetz/gruvbox'
 call plug#end()
 
@@ -39,6 +40,9 @@ syntax enable
 set autoindent
 set showmatch
 set number
+
+"" AUTOSAVE
+:au FocusLost * silent! wa
 
 "" UNDO
 set undofile
@@ -79,6 +83,11 @@ let g:jedi#use_splits_not_buffers = "right"
 
 "" CODE CHECK 
 let g:neomake_python_enabled_makers = ['pylint']
+
+""FOLD
+set foldlevel=99
+"" SIMPLE FOLDING
+let g:SimpylFold_docstring_preview = 1
 
 "" HIGHLIGHT YANK
 " hi HighlightedyankRegion cterm=reverse gui=reverse<Paste>
