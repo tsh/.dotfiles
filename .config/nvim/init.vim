@@ -13,6 +13,8 @@ Plug 'neomake/neomake'
 Plug 'machakann/vim-highlightedyank'
 Plug 'tmhedberg/SimpylFold'
 Plug 'airblade/vim-gitgutter'
+Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() } }
+Plug 'yuttie/comfortable-motion.vim'
 "" COLORSCHEMES
 Plug 'morhetz/gruvbox'
 call plug#end()
@@ -58,6 +60,7 @@ set background=dark
 "" MAPPING
 nnoremap <Esc><Esc> :<C-u>nohlsearch<CR>
 nmap <silent> <BS> :nohlsearch<CR>
+map <C-n> :NERDTreeToggle<CR>
 
 "" AUTOCOMPLETE
 let g:deoplete#enable_at_startup = 1
@@ -91,5 +94,3 @@ let g:SimpylFold_docstring_preview = 1
 
 "" HIGHLIGHT YANK
 " hi HighlightedyankRegion cterm=reverse gui=reverse<Paste>
-
-
