@@ -16,3 +16,4 @@ Clone and run provision.sh
 - [ ] show task bar with git branch
 - [ ] autocomplete from vagrant machine
 - [ ] make it beautiful (rendering, fonts)
+- [ ] autosave
