@@ -27,6 +27,15 @@ There are two things you can do about this warning:
     evil
     darcula-theme
     el-get
+    projectile
+    neotree
+    git-gutter
+
+    elpy
+    flycheck
+    ;;py-autopep8
+    blacken
+    ein
     ))
 
 
@@ -83,7 +92,6 @@ There are two things you can do about this warning:
 
 
 (setq tramp-default-method "ssh")
-
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -91,7 +99,7 @@ There are two things you can do about this warning:
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (el-get yasnippet smooth-scroll smex neotree markdown-mode json-mode go-eldoc go-autocomplete git-gutter evil darcula-theme company-quickhelp company-go company-anaconda ace-jump-mode))))
+    (projectile el-get yasnippet smooth-scroll smex neotree markdown-mode json-mode go-eldoc go-autocomplete git-gutter evil darcula-theme company-quickhelp company-go company-anaconda ace-jump-mode))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -103,3 +111,40 @@ There are two things you can do about this warning:
 (require 'ein-notebook)
 (require 'ein-subpackages)
 
+
+;; PYTHON DEV
+(elpy-enable)
+
+;; Use IPython for REPL
+;;(setq python-shell-interpreter "jupyter"
+;;      python-shell-interpreter-args "console --simple-prompt"
+;;      python-shell-prompt-detect-failure-warning nil)
+;;(add-to-list 'python-shell-completion-native-disabled-interpreters
+;;            "jupyter")
+
+
+;; Enable Flycheck
+(when (require 'flycheck nil t)
+  (setq elpy-modules (delq 'elpy-module-flymake elpy-modules))
+  (add-hook 'elpy-mode-hook 'flycheck-mode))
+
+;; Projectile
+(projectile-mode +1)
+(define-key projectile-mode-map (kbd "s-p") 'projectile-command-map)
+(define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
+
+;; Neotree
+(require 'neotree)
+(global-set-key [f8] 'neotree-toggle)
+(setq neo-theme 'arrow)
+
+;; GIT GUTTER
+(global-git-gutter-mode t)
+(global-set-key (kbd "C-x C-g") 'git-gutter)
+(global-set-key (kbd "C-x v =") 'git-gutter:popup-hunk)
+;; Revert current hunk
+(global-set-key (kbd "C-x v r") 'git-gutter:revert-hunk)
+
+
+(add-to-list 'git-gutter:update-hooks 'focus-in-hook)
+(add-to-list 'git-gutter:update-commands 'other-window)
