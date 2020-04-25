@@ -138,6 +138,20 @@ There are two things you can do about this warning:
 (global-set-key [f8] 'neotree-toggle)
 (setq neo-theme 'arrow)
 
+(setq projectile-switch-project-action 'neotree-projectile-action)
+(setq neo-smart-open t)
+
+(evil-define-key 'normal neotree-mode-map (kbd "TAB") 'neotree-enter)
+(evil-define-key 'normal neotree-mode-map (kbd "SPC") 'neotree-quick-look)
+(evil-define-key 'normal neotree-mode-map (kbd "q") 'neotree-hide)
+(evil-define-key 'normal neotree-mode-map (kbd "RET") 'neotree-enter)
+(evil-define-key 'normal neotree-mode-map (kbd "g") 'neotree-refresh)
+(evil-define-key 'normal neotree-mode-map (kbd "n") 'neotree-next-line)
+(evil-define-key 'normal neotree-mode-map (kbd "p") 'neotree-previous-line)
+(evil-define-key 'normal neotree-mode-map (kbd "A") 'neotree-stretch-toggle)
+(evil-define-key 'normal neotree-mode-map (kbd "H") 'neotree-hidden-file-toggle)
+
+
 ;; GIT GUTTER
 (global-git-gutter-mode t)
 (global-set-key (kbd "C-x C-g") 'git-gutter)
