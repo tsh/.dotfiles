@@ -151,6 +151,13 @@ There are two things you can do about this warning:
 (evil-define-key 'normal neotree-mode-map (kbd "A") 'neotree-stretch-toggle)
 (evil-define-key 'normal neotree-mode-map (kbd "H") 'neotree-hidden-file-toggle)
 
+(add-hook 'neo-after-create-hook
+   #'(lambda (_)
+       (with-current-buffer (get-buffer neo-buffer-name)
+         (setq truncate-lines t)
+         (setq word-wrap nil)
+         (make-local-variable 'auto-hscroll-mode)
+         (setq auto-hscroll-mode t))))
 
 ;; GIT GUTTER
 (global-git-gutter-mode t)
