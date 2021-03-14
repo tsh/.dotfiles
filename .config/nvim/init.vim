@@ -1,13 +1,16 @@
 call plug#begin()
-Plug 'jupyter-vim/jupyter-vim'
 Plug 'davidhalter/jedi-vim'
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'zchee/deoplete-jedi'
+
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
+
+Plug 'jpalardy/vim-slime', { 'for': 'python' }
+Plug 'hanschen/vim-ipython-cell', { 'for': 'python' }
+
 Plug 'scrooloose/nerdcommenter'  
 Plug 'sbdchd/neoformat'
-Plug 'davidhalter/jedi-vim'
 Plug 'scrooloose/nerdtree'
 Plug 'neomake/neomake'
 Plug 'machakann/vim-highlightedyank'
@@ -15,6 +18,7 @@ Plug 'tmhedberg/SimpylFold'
 Plug 'airblade/vim-gitgutter'
 Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() } }
 Plug 'yuttie/comfortable-motion.vim'
+Plug 'preservim/nerdtree'
 "" COLORSCHEMES
 Plug 'morhetz/gruvbox'
 call plug#end()
@@ -36,7 +40,6 @@ set incsearch
 set hlsearch
 set ignorecase
 set smartcase
-
 xnoremap * :<C-u>call <SID>VSetSearch('/')<CR>/<C-R>=@/<CR><CR>
 xnoremap # :<C-u>call <SID>VSetSearch('?')<CR>?<C-R>=@/<CR><CR>
 function! s:VSetSearch(cmdtype)
@@ -101,5 +104,14 @@ set foldlevel=99
 "" SIMPLE FOLDING
 let g:SimpylFold_docstring_preview = 1
 
+
+"" NERDtree
+nnoremap <leader>n :NERDTreeFocus<CR>
+nnoremap <C-n> :NERDTree<CR>
+nnoremap <C-t> :NERDTreeToggle<CR>
+nnoremap <C-f> :NERDTreeFind<CR>
+
 "" HIGHLIGHT YANK
 " hi HighlightedyankRegion cterm=reverse gui=reverse<Paste>
+
+
