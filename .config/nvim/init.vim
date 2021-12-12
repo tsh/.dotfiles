@@ -1,7 +1,9 @@
 call plug#begin()
+Plug 'neovim/nvim-lspconfig'
 Plug 'davidhalter/jedi-vim'
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'zchee/deoplete-jedi'
+Plug 'autozimu/LanguageClient-neovim', {'branch': 'next', 'do': 'bash install.sh'}
 
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
@@ -115,3 +117,8 @@ nnoremap <C-f> :NERDTreeFind<CR>
 " hi HighlightedyankRegion cterm=reverse gui=reverse<Paste>
 
 
+"" LSP
+
+lua << EOF
+require 'lspconfig'.pyright.setup{}
+EOF
