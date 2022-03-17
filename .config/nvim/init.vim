@@ -1,10 +1,15 @@
 call plug#begin()
 ""   auto-completion engine
-Plug 'hrsh7th/nvim-cmp'
+" Plug 'hrsh7th/nvim-cmp'
 ""   nvim-cmp completion sources
-Plug 'hrsh7th/cmp-nvim-lsp'
+" Plug 'hrsh7th/cmp-nvim-lsp'
 ""  nvim-lsp configuration (it relies on cmp-nvim-lsp, so it should be loaded after cmp-nvim-lsp).
 Plug 'neovim/nvim-lspconfig'
+Plug 'Shougo/deoplete.nvim'
+Plug 'deoplete-plugins/deoplete-jedi'
+
+Plug 'SirVer/ultisnips'
+Plug 'honza/vim-snippets'
 
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
@@ -180,13 +185,43 @@ end
 vim.lsp.set_log_level("debug")
 -- Use a loop to conveniently call 'setup' on multiple servers and
 -- map buffer local keybindings when the language server attaches
-  require 'lspconfig'.pylsp.setup {
+  require 'lspconfig'.jedi_language_server.setup {
     on_attach = on_attach,
     flags = {
       debounce_text_changes = 150,
-    },
-    before_init = function(_, config)
-      config.settings.python.pythonPath = get_python_path(config.root_dir)
-    end
+      },
+    --before_init = function(_, config)
+    --config.settings.python.pythonPath = get_python_path(config.root_dir)
+    --end
   }
 EOF
+
+
+" Use deoplete.
+let g:deoplete#enable_at_startup = 1
+" complete with words from any opened file
+let g:context_filetype#same_filetypes = {}
+let g:context_filetype#same_filetypes._ = '_'
+
+" Jedi-vim ------------------------------
+
+" Disable autocompletion (using deoplete instead)
+let g:jedi#completions_enabled = 0
+
+" All these mappings work only for python code:
+" Go to definition
+" let g:jedi#goto_command = ',d'
+" Find ocurrences
+" let g:jedi#usages_command = ',o'
+" Find assignments
+" let g:jedi#goto_assignments_command = ',a'
+" Go to definition in new tab
+nmap gD :tab split<CR>:call jedi#goto()<CR>
+" needed so deoplete can auto select the first suggestion
+set completeopt+=noinsert
+
+
+"" ultisnips
+let g:UltiSnipsExpandTrigger="<tab>"
+let g:UltiSnipsJumpForwardTrigger="<c-b>"
+let g:UltiSnipsJumpBackwardTrigger="<c-z>"
