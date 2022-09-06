@@ -11,8 +11,10 @@ Plug 'deoplete-plugins/deoplete-jedi'
 Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
 
+"" UI
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
+Plug 'rcarriga/nvim-notify'
 
 Plug 'jpalardy/vim-slime', { 'for': 'python' }
 Plug 'hanschen/vim-ipython-cell', { 'for': 'python' }
@@ -126,6 +128,8 @@ nnoremap <C-f> :NERDTreeFind<CR>
 "" LSP
 
 lua << EOF
+vim.notify = require("notify")
+
 local nvim_lsp = require('lspconfig')
 local configs = require('lspconfig/configs')
 local util = require('lspconfig/util')
@@ -180,6 +184,7 @@ local on_attach = function(client, bufnr)
   buf_set_keymap('n', ']d', '<cmd>lua vim.diagnostic.goto_next()<CR>', opts)
   buf_set_keymap('n', '<space>q', '<cmd>lua vim.diagnostic.setloclist()<CR>', opts)
   buf_set_keymap('n', '<space>f', '<cmd>lua vim.lsp.buf.formatting()<CR>', opts)
+
 end
 
 vim.lsp.set_log_level("debug")
