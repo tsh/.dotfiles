@@ -2,21 +2,16 @@
 local Plug = vim.fn['plug#']
 
 vim.call('plug#begin', '~/.config/nvim/plugged')
-
--- Plug 'wellle/targets.vim'
--- Plug 'tpope/vim-surround'
--- Plug 'tpope/vim-repeat'
--- Plug('scrooloose/nerdtree', {on = 'NERDTreeToggle'})
-
+-- DEV
 Plug 'jbyuki/one-small-step-for-vimkind'
 Plug 'williamboman/nvim-lsp-installer'
 Plug 'neovim/nvim-lspconfig'
 Plug 'Shougo/deoplete.nvim'
-Plug 'deoplete-plugins/deoplete-jedi'
+Plug 'deoplete-plugins/deoplete-lsp'
 Plug 'mfussenegger/nvim-dap'
 Plug 'rcarriga/nvim-dap-ui'
-
 -- UI
+Plug 'ryanoasis/vim-devicons'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'rcarriga/nvim-notify'
@@ -111,15 +106,14 @@ let g:SimpylFold_docstring_preview = 1
 ]]
 
 vim.cmd[[
-nnoremap <leader>n :NERDTreeFocus<CR>
-nnoremap <C-n> :NERDTree<CR>
 nnoremap <C-t> :NERDTreeToggle<CR>
 nnoremap <C-f> :NERDTreeFind<CR>
 ]]
 
-  vim.api.nvim_set_option('autoindent', true)
-  vim.api.nvim_set_option('showmatch', true)
-  vim.api.nvim_set_option('number', true)
+  vim.bo.autoindent = true
+  vim.go.showmatch = true
+  vim.go.termguicolors = true
+  vim.wo.number = true
 
   vim.api.nvim_set_option('undofile', true)
   vim.api.nvim_set_option('undodir', '$HOME/.vim_undo_files')
@@ -127,34 +121,21 @@ nnoremap <C-f> :NERDTreeFind<CR>
 
 --  vim.api.nvim_set_option('noswapfile', true)
 
-  vim.api.nvim_set_option('number', true)
-  vim.api.nvim_set_option('number', true)
-  vim.api.nvim_set_option('number', true)
-  vim.api.nvim_set_option('number', true)
-
 
 
 
 
   -- LSP
 
---  vim.notify = require("notify")
 
 local nvim_lsp = require('lspconfig')
-local configs = require('lspconfig/configs')
-local util = require('lspconfig/util')
-
-local path = util.path
-
 -- Use an on_attach function to only map the following keys
 -- after the language server attaches to the current buffer
 local on_attach = function(client, bufnr)
   local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
   local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
- 
   -- Enable completion triggered by <c-x><c-o>
   buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
- 
   -- Mappings.
   local opts = { noremap=true, silent=true }
 
@@ -176,18 +157,24 @@ local on_attach = function(client, bufnr)
   buf_set_keymap('n', ']d', '<cmd>lua vim.diagnostic.goto_next()<CR>', opts)
   buf_set_keymap('n', '<space>q', '<cmd>lua vim.diagnostic.setloclist()<CR>', opts)
   buf_set_keymap('n', '<space>f', '<cmd>lua vim.lsp.buf.formatting()<CR>', opts)
+
+--  local notify = require("notify")
+--  local root_dir = vim.inspect(vim.lsp.buf.list_workspace_folders())
+  notify(root_dir, 'info', {title = ' LSP root at:', timeout = 7000})
 end
 
-vim.lsp.set_log_level("debug")
--- Use a loop to conveniently call 'setup' on multiple servers and
--- map buffer local keybindings when the language server attaches
+
   require 'lspconfig'.jedi_language_server.setup {
     on_attach = on_attach,
     flags = {
       debounce_text_changes = 150,
       },
-	root_dir = nvim_lsp.util.root_pattern('.env')
+      root_dir = nvim_lsp.util.root_pattern('.env')
   }
+
+
+
+vim.lsp.set_log_level("debug")
 
 
 
@@ -197,24 +184,16 @@ let g:deoplete#enable_at_startup = 1
 " complete with words from any opened file
 let g:context_filetype#same_filetypes = {}
 let g:context_filetype#same_filetypes._ = '_'
-]]
-
-
-vim.cmd[[
 " Disable autocompletion (using deoplete instead)
-let g:jedi#completions_enabled = 0
+" let g:jedi#completions_enabled = 0
+" needed so deoplete can auto select the first suggestion
+set completeopt+=noinsert
 
 " All these mappings work only for python code:
-" Go to definition
-" let g:jedi#goto_command = ',d'
-" Find ocurrences
-" let g:jedi#usages_command = ',o'
 " Find assignments
 " let g:jedi#goto_assignments_command = ',a'
 " Go to definition in new tab
-nmap gD :tab split<CR>:call jedi#goto()<CR>
-" needed so deoplete can auto select the first suggestion
-set completeopt+=noinsert
+" nmap gD :tab split<CR>:call jedi#goto()<CR>
 
 
 "" ultisnips
@@ -252,9 +231,6 @@ vim.api.nvim_set_keymap('n', '<F5>', [[:lua require"osv".launch({port = 8086})<C
 
   local lsp_installer = require("nvim-lsp-installer")
   lsp_installer.on_server_ready(function(server)
-	  print 'Hello'
-	  for i,v  in ipairs(server) do print (i, v) end
-	  print 'H'
 	  local opts = {}
 	  server:setup(opts)
   end)
