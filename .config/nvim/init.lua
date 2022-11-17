@@ -10,6 +10,9 @@ Plug 'Shougo/deoplete.nvim'
 Plug 'deoplete-plugins/deoplete-lsp'
 Plug 'mfussenegger/nvim-dap'
 Plug 'rcarriga/nvim-dap-ui'
+-- Snip
+Plug 'L3MON4D3/LuaSnip'
+Plug 'rafamadriz/friendly-snippets'
 -- UI
 Plug 'ryanoasis/vim-devicons'
 Plug 'vim-airline/vim-airline'
@@ -122,9 +125,6 @@ nnoremap <C-f> :NERDTreeFind<CR>
 --  vim.api.nvim_set_option('noswapfile', true)
 
 
-
-
-
   -- LSP
 
 
@@ -160,7 +160,7 @@ local on_attach = function(client, bufnr)
 
 --  local notify = require("notify")
 --  local root_dir = vim.inspect(vim.lsp.buf.list_workspace_folders())
-  notify(root_dir, 'info', {title = ' LSP root at:', timeout = 7000})
+  -- notify(root_dir, 'info', {title = ' LSP root at:', timeout = 7000})
 end
 
 
@@ -202,6 +202,24 @@ let g:UltiSnipsJumpForwardTrigger="<c-b>"
 let g:UltiSnipsJumpBackwardTrigger="<c-z>"
 ]]
 
+
+-- Snippets
+vim.cmd[[
+" press <Tab> to expand or jump in a snippet. These can also be mapped separately
+" via <Plug>luasnip-expand-snippet and <Plug>luasnip-jump-next.
+imap <silent><expr> <Tab> luasnip#expand_or_jumpable() ? '<Plug>luasnip-expand-or-jump' : '<Tab>' 
+" -1 for jumping backwards.
+inoremap <silent> <S-Tab> <cmd>lua require'luasnip'.jump(-1)<Cr>
+
+snoremap <silent> <Tab> <cmd>lua require('luasnip').jump(1)<Cr>
+snoremap <silent> <S-Tab> <cmd>lua require('luasnip').jump(-1)<Cr>
+
+" For changing choices in choiceNodes (not strictly necessary for a basic setup).
+imap <silent><expr> <C-E> luasnip#choice_active() ? '<Plug>luasnip-next-choice' : '<C-E>'
+smap <silent><expr> <C-E> luasnip#choice_active() ? '<Plug>luasnip-next-choice' : '<C-E>'
+]]
+
+require("luasnip/loaders/from_vscode").lazy_load()
 
 
 -- dap
