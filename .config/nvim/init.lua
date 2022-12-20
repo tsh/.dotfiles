@@ -1,19 +1,30 @@
-
 local Plug = vim.fn['plug#']
+
+Plug 'jbyuki/one-small-step-for-vimkind'
+Plug 'williamboman/nvim-lsp-installer'
+Plug 'neovim/nvim-lspconfig'
 
 vim.call('plug#begin', '~/.config/nvim/plugged')
 -- DEV
 Plug 'jbyuki/one-small-step-for-vimkind'
 Plug 'williamboman/nvim-lsp-installer'
 Plug 'neovim/nvim-lspconfig'
-Plug 'Shougo/deoplete.nvim'
-Plug 'deoplete-plugins/deoplete-lsp'
+Plug 'hrsh7th/cmp-nvim-lsp'
+Plug 'hrsh7th/cmp-buffer'
+Plug 'hrsh7th/cmp-path'
+Plug 'hrsh7th/cmp-cmdline'
+Plug 'hrsh7th/nvim-cmp'
+--Plug 'Shougo/deoplete.nvim'
+--Plug 'deoplete-plugins/deoplete-lsp'
 Plug 'mfussenegger/nvim-dap'
 Plug 'rcarriga/nvim-dap-ui'
 -- Snip
 Plug 'L3MON4D3/LuaSnip'
 Plug 'rafamadriz/friendly-snippets'
+Plug 'saadparwaiz1/cmp_luasnip'
 -- UI
+Plug 'nvim-lua/plenary.nvim'
+Plug ('nvim-telescope/telescope.nvim', { tag = '0.1.0' })
 Plug 'ryanoasis/vim-devicons'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
@@ -33,14 +44,20 @@ Plug 'morhetz/gruvbox'
 
 vim.call('plug#end')
 
--- xnoremap * :<C-u>call <SID>VSetSearch('/')<CR>/<C-R>=@/<CR><CR>
--- xnoremap # :<C-u>call <SID>VSetSearch('?')<CR>?<C-R>=@/<CR><CR>
--- function! s:VSetSearch(cmdtype)
-  -- let temp = @s
-  -- norm! gv"sy
-  -- let @/ = '\V' . substitute(escape(@s, a:cmdtype.'\'), '\n', '\\n', 'g')
-  -- let @s = temp
---endfunction
+require('tsh')
+
+
+vim.opt.clipboard = 'unnamedplus'
+
+local keymap = vim.api.nvim_set_keymap
+local opts = { noremap = true, silent = true }
+
+-- resize 
+keymap("n", "<C-Up>", ":resize -2<CR>", opts)
+keymap("n", "<C-Down>", ":resize +2<CR>", opts)
+keymap("n", "<C-Left>", ":vertical resize -2<CR>", opts)
+keymap("n", "<C-Right>", ":vertical resize +2<CR>", opts)
+
 
 
 vim.cmd [[
@@ -53,15 +70,14 @@ vim.cmd [[
   set fileencoding=utf-8
 
 set encoding=utf-8
- 
-set visualbell
-set backspace=indent,eol,start
- 
 set incsearch
 set hlsearch
 set ignorecase
 set smartcase
-
+ 
+set visualbell
+set backspace=indent,eol,start
+ 
 
 syntax enable
 
@@ -71,13 +87,12 @@ colorscheme gruvbox
 set background=dark 
   ]]
 
-vim.cmd [[
-let g:deoplete#enable_at_startup = 1
-autocmd InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
-"" autocomplete with tab
-inoremap <expr><tab> pumvisible() ? "\<c-n>" : "\<tab>"
-
-]]
+--vim.cmd [[
+--let g:deoplete#enable_at_startup = 1
+--autocmd InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
+--"" autocomplete with tab
+--inoremap <expr><tab> pumvisible() ? "\<c-n>" : "\<tab>"
+--]]
 
 vim.cmd[[
 "" AIRLINE
@@ -122,7 +137,7 @@ nnoremap <C-f> :NERDTreeFind<CR>
   vim.api.nvim_set_option('undodir', '$HOME/.vim_undo_files')
   vim.api.nvim_set_option('undolevels', 3000)
 
---  vim.api.nvim_set_option('noswapfile', true)
+-- set noswapfile
 
 
   -- LSP
@@ -145,18 +160,18 @@ local on_attach = function(client, bufnr)
   buf_set_keymap('n', 'K', '<cmd>lua vim.lsp.buf.hover()<CR>', opts)
   buf_set_keymap('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
   buf_set_keymap('n', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
-  buf_set_keymap('n', '<space>wa', '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>', opts)
-  buf_set_keymap('n', '<space>wr', '<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>', opts)
-  buf_set_keymap('n', '<space>wl', '<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>', opts)
-  buf_set_keymap('n', '<space>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>', opts)
-  buf_set_keymap('n', '<space>rn', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
-  buf_set_keymap('n', '<space>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
-  buf_set_keymap('n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
-  buf_set_keymap('n', '<space>e', '<cmd>lua vim.diagnostic.open_float()<CR>', opts)
-  buf_set_keymap('n', '[d', '<cmd>lua vim.diagnostic.goto_prev()<CR>', opts)
-  buf_set_keymap('n', ']d', '<cmd>lua vim.diagnostic.goto_next()<CR>', opts)
-  buf_set_keymap('n', '<space>q', '<cmd>lua vim.diagnostic.setloclist()<CR>', opts)
-  buf_set_keymap('n', '<space>f', '<cmd>lua vim.lsp.buf.formatting()<CR>', opts)
+  --buf_set_keymap('n', '<space>wa', '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>', opts)
+  --buf_set_keymap('n', '<space>wr', '<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>', opts)
+  --buf_set_keymap('n', '<space>wl', '<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>', opts)
+  --buf_set_keymap('n', '<space>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>', opts)
+  --buf_set_keymap('n', '<space>rn', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
+  --buf_set_keymap('n', '<space>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
+  --buf_set_keymap('n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
+  --buf_set_keymap('n', '<space>e', '<cmd>lua vim.diagnostic.open_float()<CR>', opts)
+  --buf_set_keymap('n', '[d', '<cmd>lua vim.diagnostic.goto_prev()<CR>', opts)
+  --buf_set_keymap('n', ']d', '<cmd>lua vim.diagnostic.goto_next()<CR>', opts)
+  --buf_set_keymap('n', '<space>q', '<cmd>lua vim.diagnostic.setloclist()<CR>', opts)
+  --buf_set_keymap('n', '<space>f', '<cmd>lua vim.lsp.buf.formatting()<CR>', opts)
 
 --  local notify = require("notify")
 --  local root_dir = vim.inspect(vim.lsp.buf.list_workspace_folders())
@@ -172,22 +187,143 @@ end
       root_dir = nvim_lsp.util.root_pattern('.env')
   }
 
-
-
 vim.lsp.set_log_level("debug")
+
+
+-- AUTOCOMPLETE CMP
+--
+ local kind_icons = {
+  Text = "",
+  Method = "m",
+  Function = "",
+  Constructor = "",
+  Field = "",
+  Variable = "",
+  Class = "",
+  Interface = "",
+  Module = "",
+  Property = "",
+  Unit = "",
+  Value = "",
+  Enum = "",
+  Keyword = "",
+  Snippet = "",
+  Color = "",
+  File = "",
+  Reference = "",
+  Folder = "",
+  EnumMember = "",
+  Constant = "",
+  Struct = "",
+  Event = "",
+  Operator = "",
+  TypeParameter = "",
+} -- find more here: https://www.nerdfonts.com/cheat-sheet
+
+ local check_backspace = function()
+  local col = vim.fn.col "." - 1
+  return col == 0 or vim.fn.getline("."):sub(col, col):match "%s"
+end
+
+  local luasnip = require("luasnip")
+  local cmp = require'cmp'
+    cmp.setup({
+    snippet = {
+      expand = function(args)
+        --vim.fn["vsnip#anonymous"](args.body) -- For `vsnip` users.
+         require('luasnip').lsp_expand(args.body) -- For `luasnip` users.
+        -- require('snippy').expand_snippet(args.body) -- For `snippy` users.
+        -- vim.fn["UltiSnips#Anon"](args.body) -- For `ultisnips` users.
+      end,
+    },
+    window = {
+      -- completion = cmp.config.window.bordered(),
+      -- documentation = cmp.config.window.bordered(),
+    },
+    mapping = cmp.mapping.preset.insert({
+      ['<C-b>'] = cmp.mapping.scroll_docs(-4),
+      ['<C-f>'] = cmp.mapping.scroll_docs(4),
+      ['<C-Space>'] = cmp.mapping.complete(),
+      ['<C-e>'] = cmp.mapping.abort(),
+      ['<CR>'] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
+      ["<Tab>"] = cmp.mapping(function(fallback)
+	      if cmp.visible() then
+		cmp.select_next_item()
+	      elseif luasnip.expandable() then
+		luasnip.expand()
+	      elseif luasnip.expand_or_jumpable() then
+		luasnip.expand_or_jump()
+	      elseif check_backspace() then
+		fallback()
+	      else
+		fallback()
+	      end
+	    end, {"i", "s",}),
+    }),
+    formatting = {
+	    fields = { "kind", "abbr", "menu" },
+	    format = function(entry, vim_item)
+	      -- Kind icons
+	      vim_item.kind = string.format("%s", kind_icons[vim_item.kind])
+	      -- vim_item.kind = string.format('%s %s', kind_icons[vim_item.kind], vim_item.kind) -- This concatonates the icons with the name of the item kind
+	      vim_item.menu = ({
+		luasnip = "[Snippet]",
+		buffer = "[Buffer]",
+		path = "[Path]",
+	      })[entry.source.name]
+	      return vim_item
+	    end,
+  },
+    sources = cmp.config.sources({
+      { name = 'nvim_lsp' },
+       { name = 'luasnip' }, -- For luasnip users.
+    }, {
+      { name = 'buffer' },
+    }),
+    experimental = {
+	    ghost_text = true,
+    }
+  })
+
+  -- Use buffer source for `/` and `?` (if you enabled `native_menu`, this won't work anymore).
+  cmp.setup.cmdline({ '/', '?' }, {
+    mapping = cmp.mapping.preset.cmdline(),
+    sources = {
+      { name = 'buffer' }
+    }
+  })
+
+    -- Use cmdline & path source for ':' (if you enabled `native_menu`, this won't work anymore).
+  cmp.setup.cmdline(':', {
+    mapping = cmp.mapping.preset.cmdline(),
+    sources = cmp.config.sources({
+      { name = 'path' }
+    }, {
+      { name = 'cmdline' }
+    })
+  })
+
+    -- Set up lspconfig.
+  local capabilities = require('cmp_nvim_lsp').default_capabilities()
+  -- Replace <YOUR_LSP_SERVER> with each lsp server you've enabled.
+  require('lspconfig')['jedi_language_server'].setup {
+    capabilities = capabilities
+  }
+
+
 
 
 
   vim.cmd[[
   " Use deoplete.
-let g:deoplete#enable_at_startup = 1
+"let g:deoplete#enable_at_startup = 1
 " complete with words from any opened file
-let g:context_filetype#same_filetypes = {}
-let g:context_filetype#same_filetypes._ = '_'
+"let g:context_filetype#same_filetypes = {}
+"let g:context_filetype#same_filetypes._ = '_'
 " Disable autocompletion (using deoplete instead)
 " let g:jedi#completions_enabled = 0
 " needed so deoplete can auto select the first suggestion
-set completeopt+=noinsert
+"set completeopt+=noinsert
 
 " All these mappings work only for python code:
 " Find assignments
@@ -197,27 +333,27 @@ set completeopt+=noinsert
 
 
 "" ultisnips
-let g:UltiSnipsExpandTrigger="<tab>"
-let g:UltiSnipsJumpForwardTrigger="<c-b>"
-let g:UltiSnipsJumpBackwardTrigger="<c-z>"
+"let g:UltiSnipsExpandTrigger="<tab>"
+"let g:UltiSnipsJumpForwardTrigger="<c-b>"
+"let g:UltiSnipsJumpBackwardTrigger="<c-z>"
 ]]
 
 
 -- Snippets
-vim.cmd[[
-" press <Tab> to expand or jump in a snippet. These can also be mapped separately
-" via <Plug>luasnip-expand-snippet and <Plug>luasnip-jump-next.
-imap <silent><expr> <Tab> luasnip#expand_or_jumpable() ? '<Plug>luasnip-expand-or-jump' : '<Tab>' 
-" -1 for jumping backwards.
-inoremap <silent> <S-Tab> <cmd>lua require'luasnip'.jump(-1)<Cr>
+--vim.cmd[[
+-- " press <Tab> to expand or jump in a snippet. These can also be mapped separately
+-- " via <Plug>luasnip-expand-snippet and <Plug>luasnip-jump-next.
+-- imap <silent><expr> <Tab> luasnip#expand_or_jumpable() ? '<Plug>luasnip-expand-or-jump' : '<Tab>' 
+-- " -1 for jumping backwards.
+-- inoremap <silent> <S-Tab> <cmd>lua require'luasnip'.jump(-1)<Cr>
 
-snoremap <silent> <Tab> <cmd>lua require('luasnip').jump(1)<Cr>
-snoremap <silent> <S-Tab> <cmd>lua require('luasnip').jump(-1)<Cr>
+-- snoremap <silent> <Tab> <cmd>lua require('luasnip').jump(1)<Cr>
+-- snoremap <silent> <S-Tab> <cmd>lua require('luasnip').jump(-1)<Cr>
 
-" For changing choices in choiceNodes (not strictly necessary for a basic setup).
-imap <silent><expr> <C-E> luasnip#choice_active() ? '<Plug>luasnip-next-choice' : '<C-E>'
-smap <silent><expr> <C-E> luasnip#choice_active() ? '<Plug>luasnip-next-choice' : '<C-E>'
-]]
+-- " For changing choices in choiceNodes (not strictly necessary for a basic setup).
+-- imap <silent><expr> <C-E> luasnip#choice_active() ? '<Plug>luasnip-next-choice' : '<C-E>'
+-- smap <silent><expr> <C-E> luasnip#choice_active() ? '<Plug>luasnip-next-choice' : '<C-E>'
+-- ]]
 
 require("luasnip/loaders/from_vscode").lazy_load()
 
