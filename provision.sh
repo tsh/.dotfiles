@@ -1,3 +1,7 @@
+# xclip to allow access to system clipboard from nvim on ubuntu 18
+sudo apt install xclip
+
+# === NIX ===
 # Install Nix
 sh <(curl -L https://nixos.org/nix/install) --daemon
 
@@ -12,6 +16,8 @@ nix-env -iA \
 	nixpkgs.ripgrep \
 	nixpkgs.bat \
 	nixpkgs.direnv
+	
+# === END NIX ===
 
 # vim-plug
 curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs \
