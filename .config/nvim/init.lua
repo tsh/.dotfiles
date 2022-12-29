@@ -1,9 +1,5 @@
 local Plug = vim.fn['plug#']
 
-Plug 'jbyuki/one-small-step-for-vimkind'
-Plug 'williamboman/nvim-lsp-installer'
-Plug 'neovim/nvim-lspconfig'
-
 vim.call('plug#begin', '~/.config/nvim/plugged')
 -- DEV
 Plug 'jbyuki/one-small-step-for-vimkind'
@@ -14,8 +10,14 @@ Plug 'hrsh7th/cmp-buffer'
 Plug 'hrsh7th/cmp-path'
 Plug 'hrsh7th/cmp-cmdline'
 Plug 'hrsh7th/nvim-cmp'
---Plug 'Shougo/deoplete.nvim'
---Plug 'deoplete-plugins/deoplete-lsp'
+Plug ('hrsh7th/cmp-nvim-lua', { tag = 'main'})
+Plug 'jose-elias-alvarez/null-ls.nvim'
+
+Plug 'windwp/nvim-autopairs'
+Plug 'numToStr/Comment.nvim'
+Plug 'JoosepAlviste/nvim-ts-context-commentstring'
+
+
 Plug 'mfussenegger/nvim-dap'
 Plug 'rcarriga/nvim-dap-ui'
 -- Snip
@@ -28,23 +30,40 @@ Plug ('nvim-telescope/telescope.nvim', { tag = '0.1.0' })
 Plug 'ryanoasis/vim-devicons'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
-Plug 'rcarriga/nvim-notify'
-Plug 'scrooloose/nerdcommenter'
+Plug 'rcarriga/nvim-notify' Plug 'scrooloose/nerdcommenter'
 Plug 'sbdchd/neoformat'
 Plug 'scrooloose/nerdtree'
 Plug 'neomake/neomake'
 Plug 'machakann/vim-highlightedyank'
 Plug 'tmhedberg/SimpylFold'
-Plug 'airblade/vim-gitgutter'
+--[[ Plug 'airblade/vim-gitgutter' ]]
+Plug 'lewis6991/gitsigns.nvim'
 Plug 'yuttie/comfortable-motion.vim'
 Plug 'preservim/nerdtree'
+Plug 'p00f/nvim-ts-rainbow'
+Plug 'akinsho/bufferline.nvim'
+
+Plug ('nvim-treesitter/nvim-treesitter', { ['do'] = ':TSUpdate'})
 -- COLORSCHEMES
 Plug 'morhetz/gruvbox'
-
 
 vim.call('plug#end')
 
 require('tsh')
+
+-- NULL_LS
+local null_ls = require("null-ls")
+
+null_ls.setup({
+    sources = {
+        null_ls.builtins.formatting.black,
+
+        null_ls.builtins.completion.spell,
+
+	null_ls.builtins.diagnostics.flake8
+    },
+})
+
 
 
 vim.opt.clipboard = 'unnamedplus'
@@ -57,7 +76,6 @@ keymap("n", "<C-Up>", ":resize -2<CR>", opts)
 keymap("n", "<C-Down>", ":resize +2<CR>", opts)
 keymap("n", "<C-Left>", ":vertical resize -2<CR>", opts)
 keymap("n", "<C-Right>", ":vertical resize +2<CR>", opts)
-
 
 
 vim.cmd [[
@@ -137,7 +155,49 @@ nnoremap <C-f> :NERDTreeFind<CR>
   vim.api.nvim_set_option('undodir', '$HOME/.vim_undo_files')
   vim.api.nvim_set_option('undolevels', 3000)
 
--- set noswapfile
+
+-- DIAGNOSTICS
+
+ local signs = {
+    { name = "DiagnosticSignError", text = "" },
+    { name = "DiagnosticSignWarn", text = "" },
+    { name = "DiagnosticSignHint", text = "" },
+    { name = "DiagnosticSignInfo", text = "" },
+  }
+
+  for _, sign in ipairs(signs) do
+    vim.fn.sign_define(sign.name, { texthl = sign.name, text = sign.text, numhl = "" })
+  end
+
+  local config = {
+    -- Display diagnostic message on same line
+    virtual_text = true,
+    -- show signs
+    signs = {
+      active = signs,
+    },
+    update_in_insert = true,
+    underline = true,
+    severity_sort = true,
+    float = {
+      focusable = false,
+      style = "minimal",
+      border = "rounded",
+      source = "always",
+      header = "",
+      prefix = "",
+    },
+  }
+
+  vim.diagnostic.config(config)
+
+  vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {
+    border = "rounded",
+  })
+
+  vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, {
+    border = "rounded",
+  })
 
 
   -- LSP
@@ -173,19 +233,63 @@ local on_attach = function(client, bufnr)
   --buf_set_keymap('n', '<space>q', '<cmd>lua vim.diagnostic.setloclist()<CR>', opts)
   --buf_set_keymap('n', '<space>f', '<cmd>lua vim.lsp.buf.formatting()<CR>', opts)
 
+-- Highlight lexem under the cursor and it's usage. TODO: Fix for lua
+  if client.server_capabilities.documentHighlight then
+    vim.api.nvim_exec(
+      [[
+      augroup lsp_document_highlight
+        autocmd! * <buffer>
+        autocmd CursorHold <buffer> lua vim.lsp.buf.document_highlight()
+        autocmd CursorMoved <buffer> lua vim.lsp.buf.clear_references()
+      augroup END
+    ]],
+      false
+    )
+  end
+
 --  local notify = require("notify")
 --  local root_dir = vim.inspect(vim.lsp.buf.list_workspace_folders())
   -- notify(root_dir, 'info', {title = ' LSP root at:', timeout = 7000})
 end
 
 
-  require 'lspconfig'.jedi_language_server.setup {
-    on_attach = on_attach,
-    flags = {
-      debounce_text_changes = 150,
-      },
-      root_dir = nvim_lsp.util.root_pattern('.env')
+local lsp_capabilities = vim.lsp.protocol.make_client_capabilities()
+local capabilities = require('cmp_nvim_lsp').default_capabilities(lsp_capabilities)
+local lsp_config = require('lspconfig')
+local lsp_installer = require("nvim-lsp-installer")
+
+lsp_config.jedi_language_server.setup {
+	on_attach = on_attach,
+	capabilities = capabilities,
+	flags = {
+		debounce_text_changes = 150,
+	},
+	root_dir = nvim_lsp.util.root_pattern('.env')
+}
+
+lsp_installer.on_server_ready(function(server)
+
+  if server.name == "sumneko_lua" then
+  local opts ={
+	  on_attach = on_attach,
+	  capabilities = capabilities
   }
+	local sumneko_opts = {
+	settings = {
+		Lua = { diagnostics = {
+				globals = { "vim" },
+			},
+			workspace = {
+				library = {
+					[vim.fn.expand("$VIMRUNTIME/lua")] = true,
+					[vim.fn.stdpath("config") .. "/lua"] = true, 
+	}, }, }, }, }
+   opts = vim.tbl_deep_extend("force", sumneko_opts, opts)
+  server:setup(opts)
+  end
+end)
+
+
 
 vim.lsp.set_log_level("debug")
 
@@ -267,6 +371,8 @@ end
 	      vim_item.kind = string.format("%s", kind_icons[vim_item.kind])
 	      -- vim_item.kind = string.format('%s %s', kind_icons[vim_item.kind], vim_item.kind) -- This concatonates the icons with the name of the item kind
 	      vim_item.menu = ({
+		nvim_lsp = "[LSP]",
+		nvim_lua = "[NVIM_LUA]",
 		luasnip = "[Snippet]",
 		buffer = "[Buffer]",
 		path = "[Path]",
@@ -274,14 +380,16 @@ end
 	      return vim_item
 	    end,
   },
-    sources = cmp.config.sources({
-      { name = 'nvim_lsp' },
-       { name = 'luasnip' }, -- For luasnip users.
-    }, {
-      { name = 'buffer' },
-    }),
+  sources = {
+	  { name = 'nvim_lsp' },
+	  { name = "nvim_lua" },
+	  { name = 'luasnip' },
+	  { name = 'buffer' },
+	  { name = "path" },
+  },
     experimental = {
-	    ghost_text = true,
+	    -- show a suggestion as you type after cursor
+	    ghost_text = false,
     }
   })
 
@@ -293,6 +401,7 @@ end
     }
   })
 
+  
     -- Use cmdline & path source for ':' (if you enabled `native_menu`, this won't work anymore).
   cmp.setup.cmdline(':', {
     mapping = cmp.mapping.preset.cmdline(),
@@ -302,41 +411,6 @@ end
       { name = 'cmdline' }
     })
   })
-
-    -- Set up lspconfig.
-  local capabilities = require('cmp_nvim_lsp').default_capabilities()
-  -- Replace <YOUR_LSP_SERVER> with each lsp server you've enabled.
-  require('lspconfig')['jedi_language_server'].setup {
-    capabilities = capabilities
-  }
-
-
-
-
-
-  vim.cmd[[
-  " Use deoplete.
-"let g:deoplete#enable_at_startup = 1
-" complete with words from any opened file
-"let g:context_filetype#same_filetypes = {}
-"let g:context_filetype#same_filetypes._ = '_'
-" Disable autocompletion (using deoplete instead)
-" let g:jedi#completions_enabled = 0
-" needed so deoplete can auto select the first suggestion
-"set completeopt+=noinsert
-
-" All these mappings work only for python code:
-" Find assignments
-" let g:jedi#goto_assignments_command = ',a'
-" Go to definition in new tab
-" nmap gD :tab split<CR>:call jedi#goto()<CR>
-
-
-"" ultisnips
-"let g:UltiSnipsExpandTrigger="<tab>"
-"let g:UltiSnipsJumpForwardTrigger="<c-b>"
-"let g:UltiSnipsJumpBackwardTrigger="<c-z>"
-]]
 
 
 -- Snippets
@@ -358,107 +432,8 @@ end
 require("luasnip/loaders/from_vscode").lazy_load()
 
 
--- dap
-
-  local dap = require"dap"
-dap.configurations.lua = { 
-  { 
-    type = 'nlua', 
-    request = 'attach',
-    name = "Attach to running Neovim instance",
-  }
-}
-
-dap.adapters.nlua = function(callback, config)
-  callback({ type = 'server', host = config.host or "127.0.0.1", port = config.port or 8086 })
-end
-
-vim.api.nvim_set_keymap('n', '<F8>', [[:lua require"dap".toggle_breakpoint()<CR>]], { noremap = true })
-vim.api.nvim_set_keymap('n', '<F9>', [[:lua require"dap".continue()<CR>]], { noremap = true })
-vim.api.nvim_set_keymap('n', '<F10>', [[:lua require"dap".step_over()<CR>]], { noremap = true })
-vim.api.nvim_set_keymap('n', '<S-F10>', [[:lua require"dap".step_into()<CR>]], { noremap = true })
-vim.api.nvim_set_keymap('n', '<F12>', [[:lua require"dap.ui.widgets".hover()<CR>]], { noremap = true })
-vim.api.nvim_set_keymap('n', '<F5>', [[:lua require"osv".launch({port = 8086})<CR>]], { noremap = true })
 
 
 
 
-  local lsp_installer = require("nvim-lsp-installer")
-  lsp_installer.on_server_ready(function(server)
-	  local opts = {}
-	  server:setup(opts)
-  end)
 
-
-  require("dapui").setup({
-  icons = { expanded = "▾", collapsed = "▸", current_frame = "▸" },
-  mappings = {
-    -- Use a table to apply multiple mappings
-    expand = { "<CR>", "<2-LeftMouse>" },
-    open = "o",
-    remove = "d",
-    edit = "e",
-    repl = "r",
-    toggle = "t",
-  },
-  -- Expand lines larger than the window
-  -- Requires >= 0.7
-  expand_lines = vim.fn.has("nvim-0.7"),
-  -- Layouts define sections of the screen to place windows.
-  -- The position can be "left", "right", "top" or "bottom".
-  -- The size specifies the height/width depending on position. It can be an Int
-  -- or a Float. Integer specifies height/width directly (i.e. 20 lines/columns) while
-  -- Float value specifies percentage (i.e. 0.3 - 30% of available lines/columns)
-  -- Elements are the elements shown in the layout (in order).
-  -- Layouts are opened in order so that earlier layouts take priority in window sizing.
-  layouts = {
-    {
-      elements = {
-      -- Elements can be strings or table with id and size keys.
-        { id = "scopes", size = 0.25 },
-        "breakpoints",
-        "stacks",
-        "watches",
-      },
-      size = 40, -- 40 columns
-      position = "left",
-    },
-    {
-      elements = {
-        "repl",
-        "console",
-      },
-      size = 0.25, -- 25% of total lines
-      position = "bottom",
-    },
-  },
-  controls = {
-    -- Requires Neovim nightly (or 0.8 when released)
-    enabled = true,
-    -- Display controls in this element
-    element = "repl",
-    icons = {
-      pause = "",
-      play = "",
-      step_into = "",
-      step_over = "",
-      step_out = "",
-      step_back = "",
-      run_last = "↻",
-      terminate = "□",
-    },
-  },
-  floating = {
-    max_height = nil, -- These can be integers or a float between 0 and 1.
-    max_width = nil, -- Floats will be treated as percentage of your screen.
-    border = "single", -- Border style. Can be "single", "double" or "rounded"
-    mappings = {
-      close = { "q", "<Esc>" },
-    },
-  },
-  windows = { indent = 1 },
-  render = {
-    max_type_length = nil, -- Can be integer or nil.
-    max_value_lines = 100, -- Can be integer or nil.
-  }
-})
