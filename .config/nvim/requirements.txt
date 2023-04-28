@@ -1,0 +1,2 @@
+jedi==0.18.0
+jedi-language-server==0.35.0
