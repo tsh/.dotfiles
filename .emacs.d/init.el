@@ -1,51 +1,47 @@
+;; add melpa
 (require 'package)
-
-(add-to-list 'package-archives
-         '("melpa" . "http://melpa.org/packages/") t)
-
-;;(unless package-archive-contents
-  ;;(package-refresh-contents))
+(let* ((no-ssl (and (memq system-type '(windows-nt ms-dos))
+                    (not (gnutls-available-p))))
+       (proto (if no-ssl "http" "https")))
+  (when no-ssl (warn "\
+Your version of Emacs does not support SSL connections,
+which is unsafe because it allows man-in-the-middle attacks.
+There are two things you can do about this warning:
+1. Install an Emacs version that does support SSL and be safe.
+2. Remove this warning from your init file so you won't see it again."))
+  ;; Comment/uncomment these two lines to enable/disable MELPA and MELPA Stable as desired
+  (add-to-list 'package-archives (cons "melpa" (concat proto "://melpa.org/packages/")) t)
+  ;;(add-to-list 'package-archives (cons "melpa-stable" (concat proto "://stable.melpa.org/packages/")) t)
+  (when (< emacs-major-version 24)
+    ;; For important compatibility libraries like cl-lib
+    (add-to-list 'package-archives (cons "gnu" (concat proto "://elpa.gnu.org/packages/")))))
 
 (package-initialize)
+
 (package-refresh-contents)
 (when (not package-archive-contents)
   (package-refresh-contents))
 
 (defvar package-list
-  '(smex
-    neotree
-    ace-jump-mode
-    company
-    ;; PYTHON
-    company-anaconda
-    anaconda-mode
-    
-    ;; GO
-    go-mode
-    company-go
-    go-mode
-    go-eldoc
-    go-autocomplete
-
-    ;; js
-    json-mode
-    
-    ;; misc
-    company-quickhelp
-    git-gutter
-    markdown-mode
-    smooth-scroll
+  '(
     evil
-    yasnippet
-    ;;zenburn-theme
     darcula-theme
+    el-get
+    projectile
+    neotree
+    git-gutter
+
+    elpy
+    flycheck
+    ;;py-autopep8
+    blacken
+    ein
     ))
 
-(dolist (p package-list)
-  (when (not (package-installed-p p))
-         (package-install p)))
 
 (tool-bar-mode -1)
+(toggle-scroll-bar -1) 
+(menu-bar-mode -1) 
 (set-frame-font "Source Code Pro-16")
 (global-visual-line-mode t)
 (delete-selection-mode t)
@@ -64,71 +60,104 @@
      `((".*" ,temporary-file-directory t)))
 (setq create-lockfiles nil)
 
-
-;; THEMES
-;;(load-theme 'monokai t)
-;;(load-theme 'zenburn t)
 (load-theme 'darcula t)
 
-
-;; NEOTREE
-(require 'neotree)
-(global-set-key [f8] 'neotree-toggle)
-(setq neo-theme 'arrow)
-
-
-;; COMPANY
-(add-hook 'after-init-hook 'global-company-mode)
-;; COMPANY ANACONDA
-(eval-after-load "company"
-  '(add-to-list 'company-backends 'company-anaconda))
-;; COMPANY QUICKHELP
-(company-quickhelp-mode 1)
-(eval-after-load 'company
-  '(define-key company-active-map (kbd "M-h") #'company-quickhelp-manual-begin))
-;; company autocomplete
-(global-set-key (kbd "C-i") 'company-complete)
-
-
-;; EVIL
+(add-to-list 'load-path "~/.emacs.d/evil")
 (require 'evil)
 (evil-mode 1)
 
+;; TRAMP
+;; Open files in Docker containers like so: /docker:drunk_bardeen:/etc/passwd
+(require 'tramp)
+(push
+ (cons
+  "docker"
+  '((tramp-login-program "docker")
+    (tramp-login-args (("exec" "-it") ("%h") ("/bin/bash")))
+    (tramp-remote-shell "/bin/sh")
+    (tramp-remote-shell-args ("-i") ("-c"))))
+ tramp-methods)
 
-;; YASNIPPET
-(require 'yasnippet)
-(yas-global-mode 1)
+(defadvice tramp-completion-handle-file-name-all-completions
+  (around dotemacs-completion-docker activate)
+  "(tramp-completion-handle-file-name-all-completions \"\" \"/docker:\" returns
+    a list of active Docker container names, followed by colons."
+  (if (equal (ad-get-arg 1) "/docker:")
+      (let* ((dockernames-raw (shell-command-to-string "docker ps | awk '$NF != \"NAMES\" { print $NF \":\" }'"))
+             (dockernames (cl-remove-if-not
+                           #'(lambda (dockerline) (string-match ":$" dockerline))
+                           (split-string dockernames-raw "\n"))))
+        (setq ad-return-value dockernames))
+    ad-do-it))
 
 
-;; PYTHON
-(add-hook 'python-mode-hook 'anaconda-mode)
-
-;; GO
-(defun go-mode-setup ()
-  (setq compile-command "go build -v && go test -v && go vet && golint")
-  (define-key (current-local-map) "\C-c\C-c" 'compile)
-  (go-eldoc-setup)
-  (setq gofmt-command "goimports")
-  (add-hook 'before-save-hook 'gofmt-before-save)
-  (local-set-key (kbd "M-.") 'godef-jump))
-  (add-hook 'go-mode-hook 'go-mode-setup)
-;;Configure golint
-(add-to-list 'load-path (concat (getenv "GOPATH")  "/src/github.com/golang/lint/misc/emacs"))
-(require 'golint)
-
-
-;; Markdown mode
+(setq tramp-default-method "ssh")
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(git-gutter:update-interval 2)
- '(markdown-command "/usr/bin/pandoc")
  '(package-selected-packages
    (quote
-    (go-eldoc company-go go-mode ace-jump-mode zenburn-theme company-anaconda company neotree smex))))
+    (projectile el-get yasnippet smooth-scroll smex neotree markdown-mode json-mode go-eldoc go-autocomplete git-gutter evil darcula-theme company-quickhelp company-go company-anaconda ace-jump-mode))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
 
+(require 'ein)
+(require 'ein-notebook)
+(require 'ein-subpackages)
+
+
+;; PYTHON DEV
+(elpy-enable)
+
+;; Use IPython for REPL
+;;(setq python-shell-interpreter "jupyter"
+;;      python-shell-interpreter-args "console --simple-prompt"
+;;      python-shell-prompt-detect-failure-warning nil)
+;;(add-to-list 'python-shell-completion-native-disabled-interpreters
+;;            "jupyter")
+
+
+;; Enable Flycheck
+(when (require 'flycheck nil t)
+  (setq elpy-modules (delq 'elpy-module-flymake elpy-modules))
+  (add-hook 'elpy-mode-hook 'flycheck-mode))
+
+;; Projectile
+(projectile-mode +1)
+(define-key projectile-mode-map (kbd "s-p") 'projectile-command-map)
+(define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
+
+;; Neotree
+(require 'neotree)
+(global-set-key [f8] 'neotree-toggle)
+(setq neo-theme 'arrow)
+
+(setq projectile-switch-project-action 'neotree-projectile-action)
+(setq neo-smart-open t)
+
+(evil-define-key 'normal neotree-mode-map (kbd "TAB") 'neotree-enter)
+(evil-define-key 'normal neotree-mode-map (kbd "SPC") 'neotree-quick-look)
+(evil-define-key 'normal neotree-mode-map (kbd "q") 'neotree-hide)
+(evil-define-key 'normal neotree-mode-map (kbd "RET") 'neotree-enter)
+(evil-define-key 'normal neotree-mode-map (kbd "g") 'neotree-refresh)
+(evil-define-key 'normal neotree-mode-map (kbd "n") 'neotree-next-line)
+(evil-define-key 'normal neotree-mode-map (kbd "p") 'neotree-previous-line)
+(evil-define-key 'normal neotree-mode-map (kbd "A") 'neotree-stretch-toggle)
+(evil-define-key 'normal neotree-mode-map (kbd "H") 'neotree-hidden-file-toggle)
+
+(add-hook 'neo-after-create-hook
+   #'(lambda (_)
+       (with-current-buffer (get-buffer neo-buffer-name)
+         (setq truncate-lines t)
+         (setq word-wrap nil)
+         (make-local-variable 'auto-hscroll-mode)
+         (setq auto-hscroll-mode t))))
 
 ;; GIT GUTTER
 (global-git-gutter-mode t)
@@ -140,31 +169,3 @@
 
 (add-to-list 'git-gutter:update-hooks 'focus-in-hook)
 (add-to-list 'git-gutter:update-commands 'other-window)
-
-
-;; ACE JUMP
-(autoload
-  'ace-jump-mode
-  "ace-jump-mode"
-  "Emacs quick move minor mode"
-  t)
-;; you can select the key you prefer to
-(define-key global-map (kbd "C-;") 'ace-jump-mode)
-;; enable a more powerful jump back function from ace jump mode
-(autoload 
-  'ace-jump-mode-pop-mark
-  "ace-jump-mode"
-  "Ace jump back:-)"
-  t)
-(eval-after-load "ace-jump-mode"
-  '(ace-jump-mode-enable-mark-sync))
-(define-key global-map (kbd "C-x SPC") 'ace-jump-mode-pop-mark)
-
-
-
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )

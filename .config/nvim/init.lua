@@ -42,8 +42,6 @@ Plug 'yuttie/comfortable-motion.vim'
 Plug 'preservim/nerdtree'
 Plug 'p00f/nvim-ts-rainbow'
 Plug 'akinsho/bufferline.nvim'
-Plug 'lukas-reineke/indent-blankline.nvim'
-Plug 'folke/which-key.nvim'
 
 Plug ('nvim-treesitter/nvim-treesitter', { ['do'] = ':TSUpdate'})
 -- COLORSCHEMES
