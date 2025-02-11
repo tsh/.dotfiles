@@ -15,7 +15,6 @@ Plug 'jose-elias-alvarez/null-ls.nvim'
 
 Plug 'windwp/nvim-autopairs'
 Plug 'numToStr/Comment.nvim'
-Plug 'JoosepAlviste/nvim-ts-context-commentstring'
 
 
 Plug 'mfussenegger/nvim-dap'
@@ -40,10 +39,7 @@ Plug 'tmhedberg/SimpylFold'
 Plug 'lewis6991/gitsigns.nvim'
 Plug 'yuttie/comfortable-motion.vim'
 Plug 'preservim/nerdtree'
-Plug 'p00f/nvim-ts-rainbow'
-Plug 'akinsho/bufferline.nvim'
 
-Plug ('nvim-treesitter/nvim-treesitter', { ['do'] = ':TSUpdate'})
 -- COLORSCHEMES
 Plug 'morhetz/gruvbox'
 
@@ -64,6 +60,18 @@ null_ls.setup({
     },
 })
 
+require'lspconfig'.pylsp.setup{
+  settings = {
+    pylsp = {
+      plugins = {
+        pycodestyle = {
+          ignore = {'W391'},
+          maxLineLength = 100
+        }
+      }
+    }
+  }
+}
 
 
 vim.opt.clipboard = 'unnamedplus'
@@ -103,33 +111,20 @@ syntax enable
 
 colorscheme gruvbox
 set background=dark 
-  ]]
-
---vim.cmd [[
---let g:deoplete#enable_at_startup = 1
---autocmd InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
---"" autocomplete with tab
---inoremap <expr><tab> pumvisible() ? "\<c-n>" : "\<tab>"
---]]
+    ]]
 
 vim.cmd[[
 "" AIRLINE
-let g:airline_theme='wombat' 
+"" let g:airline_theme='wombat' 
 "" autoformat
 " Enable alignment
-let g:neoformat_basic_format_align = 1
+"" let g:neoformat_basic_format_align = 1
 " Enable tab to spaces conversion
-let g:neoformat_basic_format_retab = 1
+"" let g:neoformat_basic_format_retab = 1
 " Enable trimmming of trailing whitespace
-let g:neoformat_basic_format_trim = 1
-]]
+"" let g:neoformat_basic_format_trim = 1
+  ]]
 
-vim.cmd[[
-" disable autocompletion, cause we use deoplete for completion
-let g:jedi#completions_enabled = 0
-" open the go-to function in split, not another buffer
-let g:jedi#use_splits_not_buffers = "right"
-]]
 
 vim.cmd[[
 "" CODE CHECK 
@@ -144,6 +139,7 @@ let g:SimpylFold_docstring_preview = 1
 vim.cmd[[
 nnoremap <C-t> :NERDTreeToggle<CR>
 nnoremap <C-f> :NERDTreeFind<CR>
+let NERDTreeShowHidden=1
 ]]
 
   vim.bo.autoindent = true
@@ -171,7 +167,7 @@ nnoremap <C-f> :NERDTreeFind<CR>
 
   local config = {
     -- Display diagnostic message on same line
-    virtual_text = true,
+    virtual_text = false,
     -- show signs
     signs = {
       active = signs,
@@ -258,14 +254,6 @@ local capabilities = require('cmp_nvim_lsp').default_capabilities(lsp_capabiliti
 local lsp_config = require('lspconfig')
 local lsp_installer = require("nvim-lsp-installer")
 
-lsp_config.jedi_language_server.setup {
-	on_attach = on_attach,
-	capabilities = capabilities,
-	flags = {
-		debounce_text_changes = 150,
-	},
-	root_dir = nvim_lsp.util.root_pattern('.env')
-}
 
 lsp_installer.on_server_ready(function(server)
 
@@ -413,27 +401,4 @@ end
   })
 
 
--- Snippets
---vim.cmd[[
--- " press <Tab> to expand or jump in a snippet. These can also be mapped separately
--- " via <Plug>luasnip-expand-snippet and <Plug>luasnip-jump-next.
--- imap <silent><expr> <Tab> luasnip#expand_or_jumpable() ? '<Plug>luasnip-expand-or-jump' : '<Tab>' 
--- " -1 for jumping backwards.
--- inoremap <silent> <S-Tab> <cmd>lua require'luasnip'.jump(-1)<Cr>
-
--- snoremap <silent> <Tab> <cmd>lua require('luasnip').jump(1)<Cr>
--- snoremap <silent> <S-Tab> <cmd>lua require('luasnip').jump(-1)<Cr>
-
--- " For changing choices in choiceNodes (not strictly necessary for a basic setup).
--- imap <silent><expr> <C-E> luasnip#choice_active() ? '<Plug>luasnip-next-choice' : '<C-E>'
--- smap <silent><expr> <C-E> luasnip#choice_active() ? '<Plug>luasnip-next-choice' : '<C-E>'
--- ]]
-
 require("luasnip/loaders/from_vscode").lazy_load()
-
-
-
-
-
-
-
