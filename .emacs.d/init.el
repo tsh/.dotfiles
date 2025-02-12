@@ -1,22 +1,47 @@
+
 (require 'package)
 (add-to-list 'package-archives  '("melpa" . "http://melpa.org/packages/"))
- ;;(unless package-archive-contents  (package-refresh-contents))
+;; (unless package-archive-contents  (package-refresh-contents))
+
+(package-initialize)
+
+(use-package company
+  :ensure t
+  :config
+  (setq company-idle-delay 0.1
+        company-minimum-prefix-length 1)
+  )
+
+(add-hook 'after-init-hook 'global-company-mode)
 
 
 (use-package lsp-mode
-  :hook
-  ((python-mode . lsp-deffered)))
+  :commands (lsp lsp-deferred)
+  :init
+  (setq lsp-keymap-prefix "C-c l")
+)
 
-(use-package lsp-ui
-  :commands lsp-ui-mode)
+(use-package python
+  :bind (:map python-ts-mode-map
+              ("<f5>" . recompile)
+              ("<f6>" . eglot-format))
+  :hook ((python-ts-mode . eglot-ensure)
+         (python-ts-mode . company-mode))
+  :mode (("\\.py\\'" . python-ts-mode)))
 
-(use-package lsp-pylsp
-  :ensure t)
+(use-package pyvenv
+  :config
+  (pyvenv-mode 1))
 
-;; Load a custom theme
-;;(load-theme 'wombat t)
-(load-theme 'whiteboard t)
-;;; Vim Emulation
+
+ (use-package python-mode
+   :ensure t
+   :hook (python-mode . lsp-deferred)
+   :custom
+   (python-shell-interpreter "python3"))
+
+
+;; Vim Emulation
 (unless (package-installed-p 'evil)
   (package-install 'evil))
 (require 'evil)
@@ -40,6 +65,7 @@
 (ido-everywhere 1)
 
 (setq inhibit-startup-screen t)
+
 ;; Neotree
 (require 'neotree)
 (global-set-key [f8] 'neotree-toggle)
@@ -54,3 +80,8 @@
 (setq backup-directory-alist `((".*" . ,temporary-file-directory))
       auto-save-file-name-transforms `((".*" ,temporary-file-directory t))
       create-lockfiles nil)
+
+
+;; Load a custom theme
+;;(load-theme 'wombat t)
+ (load-theme 'whiteboard t)
