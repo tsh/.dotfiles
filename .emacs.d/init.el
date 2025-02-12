@@ -15,11 +15,6 @@
 (add-hook 'after-init-hook 'global-company-mode)
 
 
-(use-package lsp-mode
-  :commands (lsp lsp-deferred)
-  :init
-  (setq lsp-keymap-prefix "C-c l")
-)
 
 (use-package python
   :bind (:map python-ts-mode-map
@@ -32,13 +27,6 @@
 (use-package pyvenv
   :config
   (pyvenv-mode 1))
-
-
- (use-package python-mode
-   :ensure t
-   :hook (python-mode . lsp-deferred)
-   :custom
-   (python-shell-interpreter "python3"))
 
 
 ;; Vim Emulation
@@ -85,3 +73,5 @@
 ;; Load a custom theme
 ;;(load-theme 'wombat t)
  (load-theme 'whiteboard t)
+
+
