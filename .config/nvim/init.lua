@@ -2,8 +2,6 @@ local Plug = vim.fn['plug#']
 
 vim.call('plug#begin', '~/.config/nvim/plugged')
 -- DEV
-Plug 'jbyuki/one-small-step-for-vimkind'
-Plug 'williamboman/nvim-lsp-installer'
 Plug 'neovim/nvim-lspconfig'
 Plug 'hrsh7th/cmp-nvim-lsp'
 Plug 'hrsh7th/cmp-buffer'
@@ -11,12 +9,9 @@ Plug 'hrsh7th/cmp-path'
 Plug 'hrsh7th/cmp-cmdline'
 Plug 'hrsh7th/nvim-cmp'
 Plug ('hrsh7th/cmp-nvim-lua', { tag = 'main'})
-Plug 'jose-elias-alvarez/null-ls.nvim'
 
-Plug 'windwp/nvim-autopairs'
-Plug 'numToStr/Comment.nvim'
-
-
+Plug 'numToStr/Comment.nvim' -- doesn't work check alts
+-- DAP
 Plug 'mfussenegger/nvim-dap'
 Plug 'nvim-neotest/nvim-nio'
 Plug 'rcarriga/nvim-dap-ui'
@@ -27,21 +22,15 @@ Plug 'L3MON4D3/LuaSnip'
 Plug 'rafamadriz/friendly-snippets'
 Plug 'saadparwaiz1/cmp_luasnip'
 -- UI
-Plug 'nvim-lua/plenary.nvim'
-Plug ('nvim-telescope/telescope.nvim', { tag = '0.1.0' })
 Plug 'ryanoasis/vim-devicons'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
-Plug 'rcarriga/nvim-notify' Plug 'scrooloose/nerdcommenter'
-Plug 'sbdchd/neoformat'
-Plug 'scrooloose/nerdtree'
-Plug 'neomake/neomake'
 Plug 'machakann/vim-highlightedyank'
-Plug 'tmhedberg/SimpylFold'
---[[ Plug 'airblade/vim-gitgutter' ]]
-Plug 'lewis6991/gitsigns.nvim'
-Plug 'yuttie/comfortable-motion.vim'
 Plug 'preservim/nerdtree'
+-- UX
+Plug 'tmhedberg/SimpylFold'
+Plug 'yuttie/comfortable-motion.vim'
+Plug 'windwp/nvim-autopairs'
 
 -- COLORSCHEMES
 Plug 'morhetz/gruvbox'
@@ -50,90 +39,6 @@ vim.call('plug#end')
 
 require('tsh')
 
-require("dapui").setup()
-
-if (vim.env.VIRTUAL_ENV == nil) then
-	require("dap-python").setup("python")
-else
-	require("dap-python").setup(vim.env.VIRTUAL_ENV .. "/bin/python")
-end
-
-
-local dap, dapui = require("dap"), require("dapui")
-dap.listeners.before.attach.dapui_config = function()
-  dapui.open()
-end
-dap.listeners.before.launch.dapui_config = function()
-  dapui.open()
-end
-dap.listeners.before.event_terminated.dapui_config = function()
-  dapui.close()
-end
-dap.listeners.before.event_exited.dapui_config = function()
-  dapui.close()
-end
-
-
-require("nvim-dap-virtual-text").setup {
-    enabled = true,                        -- enable this plugin (the default)
-    enabled_commands = true,               -- create commands DapVirtualTextEnable, DapVirtualTextDisable, DapVirtualTextToggle, (DapVirtualTextForceRefresh for refreshing when debug adapter did not notify its termination)
-    highlight_changed_variables = true,    -- highlight changed values with NvimDapVirtualTextChanged, else always NvimDapVirtualText
-    highlight_new_as_changed = false,      -- highlight new variables in the same way as changed variables (if highlight_changed_variables)
-    show_stop_reason = true,               -- show stop reason when stopped for exceptions
-    commented = false,                     -- prefix virtual text with comment string
-    only_first_definition = true,          -- only show virtual text at first definition (if there are multiple)
-    all_references = false,                -- show virtual text on all all references of the variable (not only definitions)
-    clear_on_continue = false,             -- clear virtual text on "continue" (might cause flickering when stepping)
-    --- A callback that determines how a variable is displayed or whether it should be omitted
-    --- @param variable Variable https://microsoft.github.io/debug-adapter-protocol/specification#Types_Variable
-    --- @param buf number
-    --- @param stackframe dap.StackFrame https://microsoft.github.io/debug-adapter-protocol/specification#Types_StackFrame
-    --- @param node userdata tree-sitter node identified as variable definition of reference (see `:h tsnode`)
-    --- @param options nvim_dap_virtual_text_options Current options for nvim-dap-virtual-text
-    --- @return string|nil A text how the virtual text should be displayed or nil, if this variable shouldn't be displayed
-    display_callback = function(variable, buf, stackframe, node, options)
-    -- by default, strip out new line characters
-      if options.virt_text_pos == 'inline' then
-        return ' = ' .. variable.value:gsub("%s+", " ")
-      else
-        return variable.name .. ' = ' .. variable.value:gsub("%s+", " ")
-      end
-    end,
-    -- position of virtual text, see `:h nvim_buf_set_extmark()`, default tries to inline the virtual text. Use 'eol' to set to end of line
-    virt_text_pos = vim.fn.has 'nvim-0.10' == 1 and 'inline' or 'eol',
-
-    -- experimental features:
-    all_frames = false,                    -- show virtual text for all stack frames not only current. Only works for debugpy on my machine.
-    virt_lines = false,                    -- show virtual lines instead of virtual text (will flicker!)
-    virt_text_win_col = nil                -- position the virtual text at a fixed window column (starting from the first text column) ,
-                                           -- e.g. 80 to position at column 80, see `:h nvim_buf_set_extmark()`
-}
-
--- NULL_LS
-local null_ls = require("null-ls")
-
-null_ls.setup({
-    sources = {
-        null_ls.builtins.formatting.black,
-
-        null_ls.builtins.completion.spell,
-
-	null_ls.builtins.diagnostics.flake8
-    },
-})
-
-require'lspconfig'.pylsp.setup{
-  settings = {
-    pylsp = {
-      plugins = {
-        pycodestyle = {
-          ignore = {'W391'},
-          maxLineLength = 100
-        }
-      }
-    }
-  }
-}
 
 
 vim.opt.clipboard = 'unnamedplus'
@@ -171,27 +76,10 @@ syntax enable
 
 :au FocusLost * silent! wa
 
-colorscheme gruvbox
-set background=dark 
     ]]
 
-vim.cmd[[
-"" AIRLINE
-"" let g:airline_theme='wombat' 
-"" autoformat
-" Enable alignment
-"" let g:neoformat_basic_format_align = 1
-" Enable tab to spaces conversion
-"" let g:neoformat_basic_format_retab = 1
-" Enable trimmming of trailing whitespace
-"" let g:neoformat_basic_format_trim = 1
-  ]]
-
 
 vim.cmd[[
-"" CODE CHECK 
-let g:neomake_python_enabled_makers = ['pylint']
-
 ""FOLD
 set foldlevel=99
 "" SIMPLE FOLDING
@@ -260,6 +148,18 @@ let NERDTreeShowHidden=1
 
   -- LSP
 
+require'lspconfig'.pylsp.setup{
+  settings = {
+    pylsp = {
+      plugins = {
+        pycodestyle = {
+          ignore = {'W391'},
+          maxLineLength = 100
+        }
+      }
+    }
+  }
+}
 
 local nvim_lsp = require('lspconfig')
 -- Use an on_attach function to only map the following keys
@@ -304,41 +204,12 @@ local on_attach = function(client, bufnr)
       false
     )
   end
-
---  local notify = require("notify")
---  local root_dir = vim.inspect(vim.lsp.buf.list_workspace_folders())
-  -- notify(root_dir, 'info', {title = ' LSP root at:', timeout = 7000})
 end
 
 
 local lsp_capabilities = vim.lsp.protocol.make_client_capabilities()
 local capabilities = require('cmp_nvim_lsp').default_capabilities(lsp_capabilities)
 local lsp_config = require('lspconfig')
-local lsp_installer = require("nvim-lsp-installer")
-
-
-lsp_installer.on_server_ready(function(server)
-
-  if server.name == "sumneko_lua" then
-  local opts ={
-	  on_attach = on_attach,
-	  capabilities = capabilities
-  }
-	local sumneko_opts = {
-	settings = {
-		Lua = { diagnostics = {
-				globals = { "vim" },
-			},
-			workspace = {
-				library = {
-					[vim.fn.expand("$VIMRUNTIME/lua")] = true,
-					[vim.fn.stdpath("config") .. "/lua"] = true, 
-	}, }, }, }, }
-   opts = vim.tbl_deep_extend("force", sumneko_opts, opts)
-  server:setup(opts)
-  end
-end)
-
 
 
 vim.lsp.set_log_level("debug")
