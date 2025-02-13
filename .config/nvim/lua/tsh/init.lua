@@ -1,7 +1,4 @@
-require ('tsh/telescope')
-require ('tsh/autopairs')
 require ('tsh/comment')
-require ('tsh/gitsigns')
-
-require ('tsh/ui')
 require ('tsh/dap')
+require ('tsh/ui')
+require ('tsh/ux')
