@@ -27,6 +27,8 @@ Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'machakann/vim-highlightedyank'
 Plug 'preservim/nerdtree'
+Plug 'chentoast/marks.nvim'
+
 -- UX
 Plug 'tmhedberg/SimpylFold'
 Plug 'yuttie/comfortable-motion.vim'
