@@ -29,8 +29,6 @@ Plug 'machakann/vim-highlightedyank'
 Plug 'preservim/nerdtree'
 Plug 'chentoast/marks.nvim'
 Plug 'lewis6991/gitsigns.nvim'
-
-
 -- UX
 Plug 'tmhedberg/SimpylFold'
 Plug 'yuttie/comfortable-motion.vim'
@@ -60,6 +58,7 @@ keymap("n", "<C-Right>", ":vertical resize +2<CR>", opts)
 vim.cmd [[
   syntax enable
   set nocompatible  
+  set nowrap
 
   filetype on
   filetype indent on
@@ -74,9 +73,6 @@ set smartcase
  
 set visualbell
 set backspace=indent,eol,start
- 
-
-syntax enable
 
 :au FocusLost * silent! wa
 
