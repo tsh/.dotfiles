@@ -6,19 +6,10 @@ set background=dark
 let g:airline_theme='wombat' 
 ]]
 
-vim.cmd[[
-colorscheme gruvbox
-set background=dark 
-
-"" AIRLINE
-let g:airline_theme='wombat' 
-]]
-
 require('gitsigns').setup()
 
-
 -- Marks
--- https://github.com/chentoast/marks.nvim?tab=readme-ov-file#mappings
+-- https://github.com/chentoast/marks.nvim
 require'marks'.setup {
   -- whether to map keybinds or not. default true
   default_mappings = true,
