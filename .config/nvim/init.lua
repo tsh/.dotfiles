@@ -33,6 +33,8 @@ Plug 'lewis6991/gitsigns.nvim'
 Plug 'tmhedberg/SimpylFold'
 Plug 'yuttie/comfortable-motion.vim'
 Plug 'windwp/nvim-autopairs'
+-- TMUX
+Plug 'christoomey/vim-tmux-navigator'
 
 -- COLORSCHEMES
 Plug 'morhetz/gruvbox'
