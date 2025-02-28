@@ -116,3 +116,4 @@ if [ -f '/home/a-nikulin/Downloads/google-cloud-sdk/completion.zsh.inc' ]; then 
 export PATH=$PATH:$HOME/.pulumi/bin
 
 
+fpath+=${ZDOTDIR:-~}/.zsh_functions
