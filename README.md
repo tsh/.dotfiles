@@ -1,7 +1,11 @@
 # .dotfiles
+
+Clone to `~`. Run stow to create symlinks
 ```
-stow
+stow --adopt .
 ```
+
+Install VimPlug from https://github.com/junegunn/vim-plug?tab=readme-ov-file#neovim
 
 Clone and run 
 ```
