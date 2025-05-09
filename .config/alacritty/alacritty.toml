@@ -1,9 +1,11 @@
 [general]
 import = [
-    "~/.config/alacritty/themes/themes/wombat.toml"
+    "~/.config/alacritty/themes/themes/rose_pine.toml"
 ]
 
 [env]
 TERM = "xterm-256color"
 
-
+[terminal.shell]
+program = "tmux"
+args = ["new-session", "-A", "-D"]
