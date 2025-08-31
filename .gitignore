@@ -3,7 +3,7 @@
 .idea
 
 #nvim pluggins
-.config/nvim/plugged/*
+.config/nvim/plugged
 
 # emacs backup files
 [#]*[#]
