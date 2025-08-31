@@ -1,4 +1,15 @@
+# IDE
+
+.idea
+
+#nvim pluggins
+.config/nvim/plugged/*
+
 # emacs backup files
 [#]*[#]
 
 .config/alacritty/themes/
+# Python
+.env/
+.env.old/
+
