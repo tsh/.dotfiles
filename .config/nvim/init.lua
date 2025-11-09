@@ -63,6 +63,8 @@ keymap("n", "<C-Right>", ":vertical resize +2<CR>", opts)
 
 
 vim.cmd [[
+  map <F8> :w <CR> :!gcc % -o %< && ./%< <CR>
+
   syntax enable
   set nocompatible  
   set nowrap
@@ -128,10 +130,12 @@ let NERDTreeShowHidden=1
     -- show signs
     signs = {
       active = signs,
+	min = vim.diagnostic.severity.ERROR
     },
     update_in_insert = true,
-    underline = true,
+    underline = false,
     severity_sort = true,
+    severity = {min=vim.diagnostic.severity.ERROR},
     float = {
       focusable = false,
       style = "minimal",
@@ -140,6 +144,7 @@ let NERDTreeShowHidden=1
       header = "",
       prefix = "",
     },
+    set = {severity=vim.diagnostic.severity.ERROR}
   }
 
   vim.diagnostic.config(config)
