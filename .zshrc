@@ -210,8 +210,7 @@ fi
 export AWS_VAULT_BACKEND=file
 #source ~/aws_access_local
 
-
-
-# add Pulumi to the PATH
-export PATH=$PATH:$HOME/.pulumi/bin
 export PATH=$PATH:/opt/nvim/
+# Enable pylsp
+export PATH=$HOME/.local/bin:$PATH
+
