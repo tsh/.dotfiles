@@ -61,6 +61,9 @@ keymap("n", "<C-Down>", ":resize +2<CR>", opts)
 keymap("n", "<C-Left>", ":vertical resize -2<CR>", opts)
 keymap("n", "<C-Right>", ":vertical resize +2<CR>", opts)
 
+vim.opt["tabstop"] = 4
+vim.opt["shiftwidth"] = 4
+
 
 vim.cmd [[
   map <F8> :w <CR> :!gcc % -o %< && ./%< <CR>
