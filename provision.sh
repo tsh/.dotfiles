@@ -9,7 +9,6 @@ cd ~/.local/share/fonts && curl -fLo "Droid Sans Mono for Powerline Nerd Font Co
 
 
 # Neovim specific
-snap install nvim
 sudo apt-get install ripgrep
 # vim-plug
 curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs \
