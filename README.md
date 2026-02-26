@@ -1,6 +1,6 @@
 # .dotfiles
 
-Clone to `~`. Run stow to create symlinks
+To clone into `~`: go to .dotfiles and run stow to create symlinks
 ```
 stow --adopt .
 ```
