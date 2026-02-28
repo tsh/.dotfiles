@@ -1,7 +1,7 @@
-# xclip to allow access to system clipboard from nvim on ubuntu 18
-apt install xclip \
+apt install \
 stow \  
-snapd
+snapd \
+dunst \
 
 # install NerdFont for nvim. 
 mkdir -p ~/.local/share/fonts
