@@ -1,14 +1,21 @@
 # IDE
-
 .idea
 
 #nvim pluggins
 .config/nvim/plugged
 
+# EMACS
 # emacs backup files
 [#]*[#]
 
+.emacs.d/auto-save-list/
+.emacs.d/eln-cache/
+.emacs.d/elpa/
+.fonts/.uuid
+
+# TERM
 .config/alacritty/themes/
+
 # Python
 .env/
 .env.old/
