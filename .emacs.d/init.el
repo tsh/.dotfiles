@@ -19,26 +19,29 @@
         company-minimum-prefix-length 1)
   )
 
+;; PlantUML
+(defconst plant-uml-jar "/opt/plantuml-1.2026.2.jar")
 (use-package plantuml-mode
   :ensure t
   :config 
-	   (setq plantuml-jar-path "~/Downloads/plantuml-1.2026.1.jar")
+	   (setq plantuml-jar-path plant-uml-jar)
 		(setq plantuml-default-exec-mode 'jar)
 		;; Enable plantuml-mode for PlantUML files
 		(add-to-list 'auto-mode-alist '("\\.puml\\'" . plantuml-mode))
-		;;( plantuml-download-jar)
-  )
+)
 
 
 ;; ORG
 (setq org-startup-with-inline-images t)
 (setq org-confirm-babel-evaluate nil)
+(add-hook 'org-babel-after-execute-hook 'org-redisplay-inline-images)
 
+(setq org-image-actual-width 1200)
 
 (org-babel-do-load-languages
  'org-babel-load-languages
  '((plantuml . t))) ; this line activates plantuml
-(setq org-plantuml-jar-path (expand-file-name "~/Downloads/plantuml-1.2026.1.jar"))
+(setq org-plantuml-jar-path (expand-file-name plant-uml-jar))
 
 (add-to-list 'org-src-lang-modes '("plantuml" . plantuml))
 (org-babel-do-load-languages 'org-babel-load-languages '((plantuml . t)))
@@ -160,7 +163,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(package-selected-packages '(use-package neotree evil)))
+ '(package-selected-packages nil))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
