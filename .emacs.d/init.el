@@ -36,8 +36,9 @@
 (setq org-confirm-babel-evaluate nil)
 (add-hook 'org-babel-after-execute-hook 'org-redisplay-inline-images)
 
-(setq org-image-actual-width 1200)
+(setq org-image-actual-width 400)
 
+;; ORG PlantUML
 (org-babel-do-load-languages
  'org-babel-load-languages
  '((plantuml . t))) ; this line activates plantuml
@@ -46,6 +47,11 @@
 (add-to-list 'org-src-lang-modes '("plantuml" . plantuml))
 (org-babel-do-load-languages 'org-babel-load-languages '((plantuml . t)))
 
+
+;; ORG DOT
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((dot . t))) 
 
 ;;(add-hook 'after-init-hook 'global-company-mode)
 ;;
