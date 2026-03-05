@@ -7,6 +7,10 @@ dunst \
 mkdir -p ~/.local/share/fonts
 cd ~/.local/share/fonts && curl -fLo "Droid Sans Mono for Powerline Nerd Font Complete.otf" https://github.com/ryanoasis/nerd-fonts/raw/HEAD/patched-fonts/DroidSansMono/complete/Droid%20Sans%20Mono%20Nerd%20Font%20Complete.otf
 
+# argcomplete
+pip install argcomplete
+activate-global-python-argcomplete
+
 
 # Neovim specific
 sudo apt-get install ripgrep
