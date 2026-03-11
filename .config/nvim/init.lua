@@ -163,7 +163,7 @@ let NERDTreeShowHidden=1
 
   -- LSP
 
-require'lspconfig'.pylsp.setup{
+vim.lsp.config('pylsp', {
   settings = {
     pylsp = {
       plugins = {
@@ -174,7 +174,8 @@ require'lspconfig'.pylsp.setup{
       }
     }
   }
-}
+})
+vim.lsp.enable('pylsp')
 
 local nvim_lsp = require('lspconfig')
 -- Use an on_attach function to only map the following keys
